@@ -5,8 +5,8 @@ from torchvision import transforms
 from torch.utils.data import DataLoader
 
 from dataset import UltrasoundDataset
-from architecture import Autoencoder
-from architecture_skip_connections import AutoencoderWithSkipConnections
+from architectures import Autoencoder
+from architectures import AutoencoderWithSkipConnections
 from losses import DAELosses, WeightedLoss
 
 if __name__ == "__main__":

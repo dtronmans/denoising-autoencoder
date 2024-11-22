@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 from augmented_dataset import AugmentedUltrasoundDataset
 from losses import CombinedLoss
-from augmented_arcihtecture import AugmentedAutoencoder
+from augmented_architecture import AugmentedAutoencoder
 
 if __name__ == "__main__":
     model = AugmentedAutoencoder(num_classes=2)
@@ -18,7 +18,7 @@ if __name__ == "__main__":
         transforms.ToTensor()
     ])
 
-    dataset = AugmentedUltrasoundDataset("augmented_dataset")
+    dataset = AugmentedUltrasoundDataset("../augmented_dataset")
 
     train_indices, val_indices = train_test_split(range(len(dataset)), test_size=0.2, random_state=42)
     train_dataset = torch.utils.data.Subset(dataset, train_indices)
