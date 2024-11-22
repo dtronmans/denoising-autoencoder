@@ -4,7 +4,7 @@ import cv2
 from PIL import Image
 from torch.utils.data import Dataset
 
-from denoising_autoencoder.draw_utils import DrawUtils
+from draw_utils import DrawUtils
 
 
 # for now I resort to this https://github.com/cv516Buaa/MMOTU_DS2Net?tab=readme-ov-file
@@ -17,7 +17,7 @@ class UltrasoundDataset(Dataset):
 
         if not os.path.isdir(self.annotated_dir):
             raise FileNotFoundError(
-                "The dataset directory structure is incorrect. Expected 'annotated' and 'clean' subdirectories.")
+                "The dataset directory structure is incorrect. Expected 'annotated' subdirectories.")
 
         self.filenames = sorted(os.listdir(self.annotated_dir))
 
