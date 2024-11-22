@@ -42,10 +42,11 @@ class DrawUtils:
 
     @staticmethod
     def draw_arrows(image, color=Color.WHITE, num_dots=5, max_distance=100):
+        image_copy = image.copy()
         rgb_color = DrawUtils.color_to_palette(color)
 
         # Generate random positions for the two ends of the arrow
-        height, width, _ = image.shape
+        height, width, _ = image_copy.shape
         end1 = (random.randint(50, width - 50), random.randint(50, height - 50))
         end2 = (end1[0] + random.randint(-max_distance, max_distance), end1[1] + random.randint(-max_distance, max_distance))
 
@@ -54,7 +55,7 @@ class DrawUtils:
 
         # Draw cross-hairs at both ends
         crosshair_size = 5
-        cv2.line(image, (end1[0] - crosshair_size, end1[1]), (end1[0] + crosshair_size, end1[1]), rgb_color, 1)
+        cv2.line(image_copy, (end1[0] - crosshair_size, end1[1]), (end1[0] + crosshair_size, end1[1]), rgb_color, 1)
         cv2.line(image, (end1[0], end1[1] - crosshair_size), (end1[0], end1[1] + crosshair_size), rgb_color, 1)
 
         cv2.line(image, (end2[0] - crosshair_size, end2[1]), (end2[0] + crosshair_size, end2[1]), rgb_color, 1)
@@ -66,6 +67,8 @@ class DrawUtils:
             x = int((1 - t) * end1[0] + t * end2[0])
             y = int((1 - t) * end1[1] + t * end2[1])
             cv2.circle(image, (x, y), 1, rgb_color, -1)
+
+        return image_copy
 
     @staticmethod
     def draw_bounding_box(image):
