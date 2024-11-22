@@ -1,1 +1,0 @@
-Denoising autoencoder for annotated ultrasound scans
