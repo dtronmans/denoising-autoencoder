@@ -4,10 +4,9 @@ from sklearn.model_selection import train_test_split
 from torchvision import transforms
 from torch.utils.data import DataLoader
 
-from dataset import UltrasoundDataset
-from architectures import Autoencoder
+from datasets import UltrasoundDataset
 from architectures import AutoencoderWithSkipConnections
-from losses import DAELosses, WeightedLoss
+from losses import WeightedLoss
 
 if __name__ == "__main__":
     model = AutoencoderWithSkipConnections()

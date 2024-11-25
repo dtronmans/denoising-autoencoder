@@ -7,8 +7,7 @@ from torchvision import transforms
 import cv2
 import os
 
-from architectures import Autoencoder
-from architecture_skip_connections import AutoencoderWithSkipConnections
+from architectures import Autoencoder, AutoencoderWithSkipConnections
 
 
 class Model(Enum):

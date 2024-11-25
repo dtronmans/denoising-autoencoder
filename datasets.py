@@ -81,8 +81,40 @@ class UltrasoundDatasetInPlaceArrows(Dataset):
 
 class RdGUltrasoundDataset(Dataset):
 
-    def __init__(self):
-        pass
+    def __init__(self, dataset_path, text_path, transforms=None):
+        self.annotated_dir = os.path.join(dataset_path, "annotated")
+        self.transforms = transforms
+
+        if not os.path.isdir(self.annotated_dir):
+            raise FileNotFoundError(
+                "The dataset directory structure is incorrect. Expected 'annotated' subdirectories.")
+
+        with open(text_path, 'r') as file:
+            valid_files = [line.strip() for line in file]
+
+        valid_files = [f"RdGG_{filename}.png" for filename in valid_files]
+
+        self.filenames = [file for file in sorted(os.listdir(self.annotated_dir)) if file in valid_files]
+
+    def __len__(self):
+        return len(self.filenames)
+
+    def __getitem__(self, idx):
+        filename = self.filenames[idx]
+        annotated_path = os.path.join(self.annotated_dir, filename)
+
+        annotated_image = cv2.imread(annotated_path)
+        clean_image = DrawUtils.draw_arrows(annotated_image)  # Assuming a method to draw arrows
+
+        annotated_image = Image.fromarray(cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)).convert("L")
+        clean_image = Image.fromarray(cv2.cvtColor(clean_image, cv2.COLOR_BGR2RGB)).convert("L")
+
+        if self.transforms:
+            annotated_image = self.transforms(annotated_image)
+            clean_image = self.transforms(clean_image)
+
+        return {"annotated": annotated_image, "clean": clean_image}
+
 
 
 if __name__ == "__main__":
