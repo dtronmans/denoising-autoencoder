@@ -19,7 +19,7 @@ def infer(image_path, show=True):
     # Load and transform the input image
     image = Image.open(image_path).convert("L")
     transform = transforms.Compose([
-        transforms.Resize((256, 256)),
+        transforms.Resize((config.resize_size, config.resize_size)),
         transforms.ToTensor()
     ])
 
@@ -33,7 +33,7 @@ def infer(image_path, show=True):
     image_output = (image_output * 255).astype(np.uint8)
 
     # Convert the original image to a NumPy array for side-by-side display
-    original_image = np.array(image.resize((256, 256)))
+    original_image = np.array(image.resize((config.resize_size, config.resize_size)))
 
     # Stack the original and predicted images side-by-side
     side_by_side = np.hstack((original_image, image_output))
@@ -45,8 +45,8 @@ def infer(image_path, show=True):
 
 
 if __name__ == "__main__":
-    # infer("dataset/annotated/92.JPG", model=Model.SKIPNET)
-    path = os.path.join("rdg_set", "annotated")
+    # infer("dataset/all/92.JPG", model=Model.SKIPNET)
+    path = os.path.join("rdg_set", "all")
 
     for image in os.listdir(path):
         infer(os.path.join(path, image))

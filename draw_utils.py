@@ -1,6 +1,7 @@
 import os
 
 import cv2
+import numpy as np
 from enum import Enum
 import random
 
@@ -31,42 +32,81 @@ class DrawUtils:
 
     @staticmethod
     def color_to_palette(color):
-        """
-        Convert a Color enum to its RGB tuple for OpenCV.
-        :param color: Color enum value
-        :return: Tuple representing the RGB value
-        """
         if not isinstance(color, Color):
             raise ValueError("Provided color must be an instance of the Color enum.")
         return color.value
 
     @staticmethod
-    def draw_arrows(image, color=Color.WHITE, num_dots=5, max_distance=100):
+    def find_ovaries(image, display_contour=True):
+        """
+        Identify the central non-white region (assumed to be the ovaries) in the image.
+        :param image: Input image
+        :return: Coordinates of two random points within the region
+        """
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # Threshold the image to isolate the non-white regions
+        _, thresh = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
+
+        # Find contours of the non-white regions
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Assume the largest contour near the center is the ovary
+        if len(contours) == 0:
+            raise ValueError("No non-white regions found in the image.")
+
+        # Get the center point of the image
+        height, width = gray.shape
+        center = (width // 2, height // 2)
+
+        # Sort contours by proximity to the center
+        contours = sorted(contours, key=lambda cnt: cv2.pointPolygonTest(cnt, center, True))
+        ovary_contour = contours[0]
+
+        if display_contour:
+            contour_image = image.copy()
+            cv2.drawContours(contour_image, [ovary_contour], -1, (0, 255, 0), 2)
+            cv2.imshow("Ovary Contour", contour_image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+        # Generate two random points within the ovary contour
+        mask = np.zeros_like(gray)
+        cv2.drawContours(mask, [ovary_contour], -1, 255, -1)
+        points = np.column_stack(np.where(mask == 255))
+
+        if len(points) < 2:
+            raise ValueError("Insufficient points found in the ovary region.")
+
+        point1 = tuple(points[random.randint(0, len(points) - 1)])
+        point2 = tuple(points[random.randint(0, len(points) - 1)])
+        return point1, point2
+
+    @staticmethod
+    def draw_arrows(image, color=Color.WHITE, num_dots=30):
         image_copy = image.copy()
         rgb_color = DrawUtils.color_to_palette(color)
 
-        # Generate random positions for the two ends of the arrow
-        height, width, _ = image_copy.shape
-        end1 = (random.randint(50, width - 50), random.randint(50, height - 50))
-        end2 = (end1[0] + random.randint(-max_distance, max_distance), end1[1] + random.randint(-max_distance, max_distance))
+        try:
+            # Find two random points within the ovary
+            end1, end2 = DrawUtils.find_ovaries(image)
 
-        distance_ratio = max_distance / 100
-        num_dots = int(num_dots * distance_ratio)
+            # Draw cross-hairs at both ends
+            crosshair_size = 5
+            cv2.line(image_copy, (end1[0] - crosshair_size, end1[1]), (end1[0] + crosshair_size, end1[1]), rgb_color, 3)
+            cv2.line(image_copy, (end1[0], end1[1] - crosshair_size), (end1[0], end1[1] + crosshair_size), rgb_color, 3)
 
-        # Draw cross-hairs at both ends
-        crosshair_size = 5
-        cv2.line(image_copy, (end1[0] - crosshair_size, end1[1]), (end1[0] + crosshair_size, end1[1]), rgb_color, 1)
-        cv2.line(image, (end1[0], end1[1] - crosshair_size), (end1[0], end1[1] + crosshair_size), rgb_color, 1)
+            cv2.line(image_copy, (end2[0] - crosshair_size, end2[1]), (end2[0] + crosshair_size, end2[1]), rgb_color, 3)
+            cv2.line(image_copy, (end2[0], end2[1] - crosshair_size), (end2[0], end2[1] + crosshair_size), rgb_color, 3)
 
-        cv2.line(image, (end2[0] - crosshair_size, end2[1]), (end2[0] + crosshair_size, end2[1]), rgb_color, 1)
-        cv2.line(image, (end2[0], end2[1] - crosshair_size), (end2[0], end2[1] + crosshair_size), rgb_color, 1)
+            # Draw dotted line between the two ends
+            for i in range(num_dots + 1):
+                t = i / num_dots
+                x = int((1 - t) * end1[0] + t * end2[0])
+                y = int((1 - t) * end1[1] + t * end2[1])
+                cv2.circle(image_copy, (x, y), 1, rgb_color, -1)
 
-        # Draw dotted line between the two ends
-        for i in range(num_dots + 1):
-            t = i / num_dots
-            x = int((1 - t) * end1[0] + t * end2[0])
-            y = int((1 - t) * end1[1] + t * end2[1])
-            cv2.circle(image, (x, y), 1, rgb_color, -1)
+        except ValueError as e:
+            print(f"Error: {e}")
 
         return image_copy
 
@@ -76,13 +116,13 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    path_clean = os.path.join("dataset", "clean")
-    path_annotated = os.path.join("dataset", "annotated")
+    path_clean = os.path.join("rdg_set", "clean")
+    path_annotated = os.path.join("rdg_set", "annotated")
 
     for file in os.listdir(path_clean):
         image = cv2.imread(os.path.join(path_clean, file))
-        DrawUtils.draw_arrows(image, Color.YELLOW, max_distance=1000)
-        cv2.imwrite(os.path.join(path_annotated, file), image)
+        drawn_image = DrawUtils.draw_arrows(image, Color.YELLOW)
+        cv2.imwrite(os.path.join(path_annotated, file), drawn_image)
 
     # test_image = cv2.imread("car.jpg")
     # DrawUtils.draw_arrows(test_image, Color.LIGHT_BLUE)
