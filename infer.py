@@ -13,7 +13,7 @@ from config import Config
 
 def infer(image_path, show=True):
     config = Config("config.json")
-    config.architecture.load_state_dict(torch.load("model.pt", weights_only=True))
+    config.architecture.load_state_dict(torch.load("model2.pt", weights_only=True))
     config.architecture.eval()
 
     # Load and transform the input image

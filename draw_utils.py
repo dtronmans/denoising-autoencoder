@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
     for file in os.listdir(path_clean):
         image = cv2.imread(os.path.join(path_clean, file))
-        drawn_image = DrawUtils.draw_arrows(image, Color.YELLOW)
+        drawn_image = DrawUtils.draw_arrows(image, Color.WHITE, num_dots=100)
         cv2.imwrite(os.path.join(path_annotated, file), drawn_image)
 
     # test_image = cv2.imread("car.jpg")
