@@ -4,33 +4,29 @@ from sklearn.model_selection import train_test_split
 from torchvision import transforms
 from torch.utils.data import DataLoader
 
-from datasets import UltrasoundDataset
+from config import Config
+from datasets import UltrasoundDataset, RdGUltrasoundDataset
 from architectures import AutoencoderWithSkipConnections
 from losses import WeightedLoss
 
 if __name__ == "__main__":
+    config = Config("config.json")
+
     model = AutoencoderWithSkipConnections()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.ToTensor()
-    ])
+    train_indices, val_indices = train_test_split(range(len(config.dataset)), test_size=0.2, random_state=42)
+    train_dataset = torch.utils.data.Subset(config.dataset, train_indices)
+    val_dataset = torch.utils.data.Subset(config.dataset, val_indices)
 
-    dataset = UltrasoundDataset("dataset", transforms=transform)
+    train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 
-    train_indices, val_indices = train_test_split(range(len(dataset)), test_size=0.2, random_state=42)
-    train_dataset = torch.utils.data.Subset(dataset, train_indices)
-    val_dataset = torch.utils.data.Subset(dataset, val_indices)
+    losses = WeightedLoss(alpha=config.loss_alpha)
+    optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
-    train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=4, shuffle=False)
-
-    losses = WeightedLoss(alpha=20.0)
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-    num_epochs = 200
+    num_epochs = config.epochs
     for epoch in range(num_epochs):
         model.train()
         for batch in train_loader:

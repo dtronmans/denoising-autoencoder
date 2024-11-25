@@ -1,0 +1,11 @@
+{
+  "architecture": "AutoencoderWithSkipConnections",
+  "dataset": "RdGUltrasoundDataset",
+  "dataset_path": "rdg_set",
+  "clean_images_txt": "rdg_clean.txt",
+  "loss_alpha": 30.0,
+  "resize_size": 256,
+  "epochs": 100,
+  "lr": 0.001,
+  "batch_size": 4
+}

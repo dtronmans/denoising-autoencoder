@@ -104,7 +104,7 @@ class RdGUltrasoundDataset(Dataset):
         annotated_path = os.path.join(self.annotated_dir, filename)
 
         annotated_image = cv2.imread(annotated_path)
-        clean_image = DrawUtils.draw_arrows(annotated_image)  # Assuming a method to draw arrows
+        clean_image = DrawUtils.draw_arrows(annotated_image)
 
         annotated_image = Image.fromarray(cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)).convert("L")
         clean_image = Image.fromarray(cv2.cvtColor(clean_image, cv2.COLOR_BGR2RGB)).convert("L")
@@ -114,7 +114,6 @@ class RdGUltrasoundDataset(Dataset):
             clean_image = self.transforms(clean_image)
 
         return {"annotated": annotated_image, "clean": clean_image}
-
 
 
 if __name__ == "__main__":
