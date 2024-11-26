@@ -82,13 +82,13 @@ class DrawUtils:
         return point1, point2
 
     @staticmethod
-    def draw_arrows(image, color=Color.WHITE, num_dots=30):
+    def draw_arrows(image, color=Color.WHITE, num_dots=30, display_contour=True):
         image_copy = image.copy()
         rgb_color = DrawUtils.color_to_palette(color)
 
         try:
             # Find two random points within the ovary
-            end1, end2 = DrawUtils.find_ovaries(image)
+            end1, end2 = DrawUtils.find_ovaries(image, display_contour=display_contour)
 
             # Draw cross-hairs at both ends
             crosshair_size = 5
@@ -114,14 +114,44 @@ class DrawUtils:
     def draw_bounding_box(image):
         return
 
+    @staticmethod
+    def remove_template_match(image, template_match_path, threshold=0.8):
+        template = cv2.imread(template_match_path, cv2.IMREAD_COLOR)
+        if template is None:
+            raise FileNotFoundError(f"Template file not found: {template_match_path}")
+
+        template_height, template_width = template.shape[:2]
+
+        result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
+
+        # Find locations where the matching value exceeds the threshold
+        loc = np.where(result >= threshold)
+
+        # Create a copy of the image to modify
+        processed_image = image.copy()
+
+        # Replace matched regions with white
+        for pt in zip(*loc[::-1]):  # Switch the order of coordinates
+            cv2.rectangle(
+                processed_image,
+                pt,
+                (pt[0] + template_width, pt[1] + template_height),
+                (255, 255, 255),  # White color
+                -1  # Fill the rectangle
+            )
+
+        return processed_image
+
 
 if __name__ == "__main__":
     path_clean = os.path.join("rdg_set", "clean")
     path_annotated = os.path.join("rdg_set", "annotated")
+    template_path = "rdg_set/template_match.png"
 
     for file in os.listdir(path_clean):
         image = cv2.imread(os.path.join(path_clean, file))
-        drawn_image = DrawUtils.draw_arrows(image, Color.WHITE, num_dots=100)
+        processed_image = DrawUtils.remove_template_match(image, template_path)
+        drawn_image = DrawUtils.draw_arrows(processed_image, Color.WHITE, num_dots=100, display_contour=True)
         cv2.imwrite(os.path.join(path_annotated, file), drawn_image)
 
     # test_image = cv2.imread("car.jpg")
