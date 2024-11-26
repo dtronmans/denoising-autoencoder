@@ -91,17 +91,13 @@ class WeightedLoss(nn.Module):
         Returns:
             torch.Tensor: The computed weighted loss (scalar).
         """
-        # Binary mask for arrows (1 where annotations differ, 0 elsewhere)
         arrow_mask = (annotated != clean).float()  # Shape: (batch, 1, height, width)
 
-        # Weight map: alpha for arrow pixels, beta for background pixels
         weight_map = self.alpha * arrow_mask + self.beta * (1 - arrow_mask)
 
-        # Pixel-wise squared error
         pixel_wise_error = (clean - predicted) ** 2  # Shape: (batch, 1, height, width)
 
-        # Weighted MSE Loss
         weighted_error = weight_map * pixel_wise_error  # Shape: (batch, 1, height, width)
-        loss = weighted_error.sum() / weight_map.sum()  # Normalize by the sum of weights
+        loss = weighted_error.sum() / weight_map.sum()
 
         return loss

@@ -24,7 +24,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 
-    losses = WeightedLoss(alpha=config.loss_alpha)
+    losses = WeightedLoss(alpha=config.loss_alpha, beta=config.loss_beta)
     optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
     num_epochs = config.epochs
@@ -63,5 +63,5 @@ if __name__ == "__main__":
         writer.add_scalar("Denoising Loss/val", val_loss, epoch)
         print(f"Epoch {epoch}, Validation Loss: {val_loss}")
 
-    torch.save(model.state_dict(), "model2.pt")
+    torch.save(model.state_dict(), "model3.pt")
     writer.flush()

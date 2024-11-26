@@ -82,13 +82,13 @@ class DrawUtils:
         return point1, point2
 
     @staticmethod
-    def draw_arrows(image, color=Color.WHITE, num_dots=30, display_contour=True):
+    def draw_arrows(image, ovarian_mask, color=Color.WHITE, num_dots=30, display_contour=True):
         image_copy = image.copy()
         rgb_color = DrawUtils.color_to_palette(color)
 
         try:
             # Find two random points within the ovary
-            end1, end2 = DrawUtils.find_ovaries(image, display_contour=display_contour)
+            end1, end2 = ovarian_mask
 
             # Draw cross-hairs at both ends
             crosshair_size = 5
@@ -142,6 +142,37 @@ class DrawUtils:
 
         return processed_image
 
+    @staticmethod
+    def random_draw_text(image, ovarian_mask, chance=1.0):
+        """
+        Randomly draw the text "Rt Ovary" or "LL Ovary" on the ovarian mask with a small random chance.
+        :param image: Input image
+        :param chance: Probability of drawing the text
+        :return: Modified image with text (if drawn)
+        """
+        if random.random() > chance:
+            # Skip drawing text based on random chance
+            return image
+
+        try:
+            # Use the find_ovaries method to get two random points within the ovary region
+            point1, _ = ovarian_mask
+
+            # Randomly choose text
+            text = random.choice(["Rt Ovary", "LL Ovary"])
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 0.5
+            font_thickness = 1
+
+            # Draw the text near the first point
+            text_color = (0, 0, 255)  # Red color for visibility
+            cv2.putText(image, text, (point1[0], point1[1] - 10), font, font_scale, text_color, font_thickness)
+
+        except ValueError as e:
+            print(f"Error finding ovaries: {e}")
+
+        return image
+
 
 if __name__ == "__main__":
     path_clean = os.path.join("rdg_set", "clean")
@@ -151,11 +182,7 @@ if __name__ == "__main__":
     for file in os.listdir(path_clean):
         image = cv2.imread(os.path.join(path_clean, file))
         processed_image = DrawUtils.remove_template_match(image, template_path)
-        drawn_image = DrawUtils.draw_arrows(processed_image, Color.WHITE, num_dots=100, display_contour=True)
+        ovarian_mask = DrawUtils.find_ovaries(processed_image, display_contour=False)
+        processed_image = DrawUtils.random_draw_text(processed_image, ovarian_mask)
+        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask, Color.WHITE, num_dots=60)
         cv2.imwrite(os.path.join(path_annotated, file), drawn_image)
-
-    # test_image = cv2.imread("car.jpg")
-    # DrawUtils.draw_arrows(test_image, Color.LIGHT_BLUE)
-    # cv2.imshow("Drawn arrows", test_image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
