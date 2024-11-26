@@ -46,9 +46,9 @@ class AugmentedUltrasoundDataset(Dataset):
             annotated_image = self.transforms(annotated_image)
             clean_image = self.transforms(clean_image)
 
-        return {"annotated": annotated_image, "clean": clean_image, "label": label}
+        return {"all": annotated_image, "clean": clean_image, "label": label}
 
 
 if __name__ == "__main__":
-    dataset = AugmentedUltrasoundDataset("augmented_dataset")
+    dataset = AugmentedUltrasoundDataset("../augmented_dataset")
     print(dataset[0])
