@@ -82,13 +82,13 @@ class DrawUtils:
         return point1, point2
 
     @staticmethod
-    def draw_arrows(image, color=Color.WHITE, num_dots=30):
+    def draw_arrows(image, ovarian_mask, color=Color.WHITE, num_dots=30, display_contour=True):
         image_copy = image.copy()
         rgb_color = DrawUtils.color_to_palette(color)
 
         try:
             # Find two random points within the ovary
-            end1, end2 = DrawUtils.find_ovaries(image)
+            end1, end2 = ovarian_mask
 
             # Draw cross-hairs at both ends
             crosshair_size = 5
@@ -114,18 +114,75 @@ class DrawUtils:
     def draw_bounding_box(image):
         return
 
+    @staticmethod
+    def remove_template_match(image, template_match_path, threshold=0.8):
+        template = cv2.imread(template_match_path, cv2.IMREAD_COLOR)
+        if template is None:
+            raise FileNotFoundError(f"Template file not found: {template_match_path}")
+
+        template_height, template_width = template.shape[:2]
+
+        result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
+
+        # Find locations where the matching value exceeds the threshold
+        loc = np.where(result >= threshold)
+
+        # Create a copy of the image to modify
+        processed_image = image.copy()
+
+        # Replace matched regions with white
+        for pt in zip(*loc[::-1]):  # Switch the order of coordinates
+            cv2.rectangle(
+                processed_image,
+                pt,
+                (pt[0] + template_width, pt[1] + template_height),
+                (255, 255, 255),  # White color
+                -1  # Fill the rectangle
+            )
+
+        return processed_image
+
+    @staticmethod
+    def random_draw_text(image, ovarian_mask, chance=1.0):
+        """
+        Randomly draw the text "Rt Ovary" or "LL Ovary" on the ovarian mask with a small random chance.
+        :param image: Input image
+        :param chance: Probability of drawing the text
+        :return: Modified image with text (if drawn)
+        """
+        if random.random() > chance:
+            # Skip drawing text based on random chance
+            return image
+
+        try:
+            # Use the find_ovaries method to get two random points within the ovary region
+            point1, _ = ovarian_mask
+
+            # Randomly choose text
+            text = random.choice(["Rt Ovary", "LL Ovary"])
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 0.5
+            font_thickness = 1
+
+            # Draw the text near the first point
+            text_color = (0, 0, 255)  # Red color for visibility
+            cv2.putText(image, text, (point1[0], point1[1] - 10), font, font_scale, text_color, font_thickness)
+
+        except ValueError as e:
+            print(f"Error finding ovaries: {e}")
+
+        return image
+
 
 if __name__ == "__main__":
     path_clean = os.path.join("rdg_set", "clean")
     path_annotated = os.path.join("rdg_set", "annotated")
+    template_path = "rdg_set/template_match.png"
 
     for file in os.listdir(path_clean):
         image = cv2.imread(os.path.join(path_clean, file))
-        drawn_image = DrawUtils.draw_arrows(image, Color.WHITE, num_dots=100)
+        processed_image = DrawUtils.remove_template_match(image, template_path)
+        ovarian_mask = DrawUtils.find_ovaries(processed_image, display_contour=False)
+        processed_image = DrawUtils.random_draw_text(processed_image, ovarian_mask)
+        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask, Color.WHITE, num_dots=60)
         cv2.imwrite(os.path.join(path_annotated, file), drawn_image)
-
-    # test_image = cv2.imread("car.jpg")
-    # DrawUtils.draw_arrows(test_image, Color.LIGHT_BLUE)
-    # cv2.imshow("Drawn arrows", test_image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()

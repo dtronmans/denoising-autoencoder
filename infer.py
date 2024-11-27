@@ -13,7 +13,7 @@ from config import Config
 
 def infer(image_path, show=True):
     config = Config("config.json")
-    config.architecture.load_state_dict(torch.load("model2.pt", weights_only=True))
+    config.architecture.load_state_dict(torch.load("model3.pt", weights_only=True))
     config.architecture.eval()
 
     # Load and transform the input image
@@ -43,10 +43,13 @@ def infer(image_path, show=True):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    return image_output
+
 
 if __name__ == "__main__":
     # infer("dataset/all/92.JPG", model=Model.SKIPNET)
     path = os.path.join("rdg_set", "all")
 
     for image in os.listdir(path):
-        infer(os.path.join(path, image))
+        cleaned_image = infer(os.path.join(path, image), show=True)
+        # cv2.imwrite(os.path.join("complete_clean", image), cleaned_image)

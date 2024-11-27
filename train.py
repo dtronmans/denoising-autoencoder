@@ -24,7 +24,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 
-    losses = WeightedLoss(alpha=config.loss_alpha)
+    losses = WeightedLoss(alpha=config.loss_alpha, beta=config.loss_beta)
     optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
     num_epochs = config.epochs
@@ -44,7 +44,7 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
-        writer.add_scalar("Loss/train", loss, epoch)
+        writer.add_scalar("Denoising Loss/train", loss, epoch)
         print(f"Epoch {epoch}, Train Loss: {loss.item()}")
 
         model.eval()
@@ -60,8 +60,8 @@ if __name__ == "__main__":
                 val_loss += loss.item()
 
         val_loss /= len(val_loader)
-        writer.add_scalar("Loss/val", val_loss, epoch)
+        writer.add_scalar("Denoising Loss/val", val_loss, epoch)
         print(f"Epoch {epoch}, Validation Loss: {val_loss}")
 
-    torch.save(model.state_dict(), "model2.pt")
+    torch.save(model.state_dict(), "model3.pt")
     writer.flush()

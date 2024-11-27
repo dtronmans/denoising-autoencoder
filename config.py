@@ -15,6 +15,7 @@ class Config:
         self.dataset_path = config.get('dataset_path')
         self.clean_images_txt = config.get('clean_images_txt')
         self.loss_alpha = config.get('loss_alpha')
+        self.loss_beta = config.get('loss_beta')
         self.resize_size = config.get('resize_size')
         self.epochs = config.get('epochs')
         self.lr = config.get('lr')
