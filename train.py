@@ -17,9 +17,12 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    train_indices, val_indices = train_test_split(range(len(config.dataset)), test_size=0.2, random_state=42)
+    train_indices, val_indices = train_test_split(range(len(config.dataset)), test_size=config.val_split, random_state=42)
     train_dataset = torch.utils.data.Subset(config.dataset, train_indices)
     val_dataset = torch.utils.data.Subset(config.dataset, val_indices)
+
+    print("Train dataset length: " + str(len(train_dataset)))
+    print("Val dataset length: " + str(len(val_dataset)))
 
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)

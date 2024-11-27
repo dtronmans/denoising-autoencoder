@@ -20,6 +20,7 @@ class Config:
         self.epochs = config.get('epochs')
         self.lr = config.get('lr')
         self.batch_size = config.get('batch_size')
+        self.val_split = config.get('val_split')
         self.parse_architecture_dataset()
 
     def __repr__(self):
@@ -27,8 +28,11 @@ class Config:
 
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
-            transforms.Resize((self.resize_size, self.resize_size)),
-            transforms.ToTensor()
+            transforms.Resize((self.resize_size, self.resize_size)),  # Resize to a fixed size
+            transforms.RandomHorizontalFlip(p=0.5),  # Random horizontal flip
+            transforms.RandomRotation(degrees=15),  # Random rotation within ±15 degrees
+            transforms.ToTensor(),  # Convert to tensor
+            # Normalize using ImageNet stats
         ])
 
         if self.dataset == "UltrasoundDataset":
