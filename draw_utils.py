@@ -114,10 +114,6 @@ class DrawUtils:
         return image_copy
 
     @staticmethod
-    def draw_bounding_box(image):
-        return
-
-    @staticmethod
     def remove_template_match(image, template_match_path, threshold=0.8):
         template = cv2.imread(template_match_path, cv2.IMREAD_COLOR)
         if template is None:
@@ -150,7 +146,7 @@ class DrawUtils:
         try:
             point1, _ = ovarian_points
 
-            text = random.choice(["Rt Ovary", "LL Ovary"])
+            text = random.choice(["Rt. Ovary", "LL Ovary"])
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 1
             font_thickness = 2
@@ -162,6 +158,10 @@ class DrawUtils:
             print(f"Error finding ovaries: {e}")
 
         return image
+
+    @staticmethod
+    def draw_bounding_box(image):
+        return
 
 
 if __name__ == "__main__":

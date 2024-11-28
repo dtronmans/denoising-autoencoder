@@ -10,29 +10,42 @@ class Config:
     def __init__(self, json_path):
         with open(json_path, 'r') as file:
             config = json.load(file)
-        self.architecture = config.get('architecture')
-        self.dataset = config.get('dataset')
-        self.dataset_path = config.get('dataset_path')
-        self.clean_images_txt = config.get('clean_images_txt')
-        self.loss_alpha = config.get('loss_alpha')
-        self.loss_beta = config.get('loss_beta')
-        self.resize_size = config.get('resize_size')
-        self.epochs = config.get('epochs')
-        self.lr = config.get('lr')
-        self.batch_size = config.get('batch_size')
-        self.val_split = config.get('val_split')
+
+        # Dataset
+        self.dataset = self.get_nested(config, ['dataset', 'dataset'])
+        self.dataset_path = self.get_nested(config, ['dataset', 'dataset_path'])
+        self.clean_images_txt = self.get_nested(config, ['dataset', 'clean_images_txt'])
+
+        # Training
+        self.architecture = self.get_nested(config, ['training', 'architecture'])
+        self.loss_alpha = self.get_nested(config, ['training', 'loss_alpha'])
+        self.loss_beta = self.get_nested(config, ['training', 'loss_beta'])
+        self.resize_size = self.get_nested(config, ['training', 'resize_size'])
+        self.epochs = self.get_nested(config, ['training', 'epochs'])
+        self.lr = self.get_nested(config, ['training', 'lr'])
+        self.batch_size = self.get_nested(config, ['training', 'batch_size'])
+        self.val_split = self.get_nested(config, ['training', 'val_split'])
+
+        # Draw
+        self.interactive_mode = self.get_nested(config, ['draw', 'interactive_mode'], default=False)
+
         self.parse_architecture_dataset()
 
     def __repr__(self):
         return f"Config({self.__dict__})"
 
+    def get_nested(self, dictionary, keys, default=None):
+        for key in keys:
+            if isinstance(dictionary, dict):
+                dictionary = dictionary.get(key)
+            else:
+                return default
+        return dictionary
+
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
             transforms.Resize((self.resize_size, self.resize_size)),  # Resize to a fixed size
-            transforms.RandomHorizontalFlip(p=0.5),  # Random horizontal flip
-            transforms.RandomRotation(degrees=15),  # Random rotation within ±15 degrees
             transforms.ToTensor(),  # Convert to tensor
-            # Normalize using ImageNet stats
         ])
 
         if self.dataset == "UltrasoundDataset":

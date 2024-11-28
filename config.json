@@ -1,13 +1,20 @@
 {
-  "architecture": "AutoencoderWithSkipConnections",
-  "dataset": "UltrasoundDataset",
-  "dataset_path": "rdg_set",
-  "clean_images_txt": "rdg_clean.txt",
-  "loss_alpha": 40.0,
-  "loss_beta": 0.5,
-  "resize_size": 256,
-  "epochs": 100,
-  "lr": 0.001,
-  "batch_size": 4,
-  "val_split": 0.1
+  "training": {
+    "loss_alpha": 300.0,
+    "loss_beta": 0.5,
+    "resize_size": 256,
+    "epochs": 200,
+    "lr": 0.001,
+    "batch_size": 4,
+    "val_split": 0.1,
+    "architecture": "AutoencoderWithSkipConnections"
+  },
+  "dataset": {
+    "dataset": "UltrasoundDataset",
+    "dataset_path": "rdg_set",
+    "clean_images_txt": "rdg_clean.txt"
+  },
+  "draw": {
+    "interactive_mode": false
+  }
 }

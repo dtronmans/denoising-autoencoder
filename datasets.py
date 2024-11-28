@@ -7,9 +7,9 @@ from torch.utils.data import Dataset
 from draw_utils import DrawUtils
 
 
-# for now I resort to this https://github.com/cv516Buaa/MMOTU_DS2Net?tab=readme-ov-file
-# extra idea: only add the arrow with a random chance, so it learns to identity map images
-# that do not have arrows
+# extra check: is transforms stochastic for the clean and target images? If yes, this will
+# cause moments when the clean is rotated or flipped but not the target image
+# So check that, or maybe train with rotation or flip probability 1.
 
 class UltrasoundDataset(Dataset):
     def __init__(self, dataset_path, transforms=None):

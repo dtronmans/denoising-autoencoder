@@ -1,5 +1,3 @@
-from enum import Enum
-
 from PIL import Image
 import torch
 import numpy as np
@@ -7,7 +5,6 @@ from torchvision import transforms
 import cv2
 import os
 
-from architectures import Autoencoder, AutoencoderWithSkipConnections
 from config import Config
 
 
@@ -48,8 +45,8 @@ def infer(image_path, show=True):
 
 if __name__ == "__main__":
     # infer("dataset/all/92.JPG", model=Model.SKIPNET)
-    path = os.path.join("rdg_set", "all")
+    path = os.path.join("LUMC_clean", "benign")
 
     for image in os.listdir(path):
-        cleaned_image = infer(os.path.join(path, image), show=True)
-        # cv2.imwrite(os.path.join("complete_clean", image), cleaned_image)
+        cleaned_image = infer(os.path.join(path, image), show=False)
+        cv2.imwrite(os.path.join("LUMC_clean_inferred/benign", image), cleaned_image)

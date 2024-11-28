@@ -7,7 +7,6 @@ class Autoencoder(nn.Module):
     def __init__(self):
         super(Autoencoder, self).__init__()
 
-        # Encoder
         self.encoder = nn.Sequential(
             nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
@@ -22,7 +21,6 @@ class Autoencoder(nn.Module):
             nn.MaxPool2d(2, 2)
         )
 
-        # Latent space
         self.latent = nn.Sequential(
             nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),  # (B, 512, 16, 16)
             nn.ReLU(),
@@ -30,7 +28,6 @@ class Autoencoder(nn.Module):
             nn.ReLU()
         )
 
-        # Decoder
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2),  # Upsample (B, 128, 32, 32)
             nn.ReLU(),
@@ -53,7 +50,6 @@ class AutoencoderWithSkipConnections(nn.Module):
     def __init__(self):
         super(AutoencoderWithSkipConnections, self).__init__()
 
-        # Encoder
         self.encoder_conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1)
         self.encoder_relu1 = nn.ReLU()
         self.encoder_pool1 = nn.MaxPool2d(2, 2)
@@ -66,13 +62,11 @@ class AutoencoderWithSkipConnections(nn.Module):
         self.encoder_relu3 = nn.ReLU()
         self.encoder_pool3 = nn.MaxPool2d(2, 2)
 
-        # Latent space
         self.latent_conv1 = nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1)
         self.latent_relu1 = nn.ReLU()
         self.latent_conv2 = nn.Conv2d(512, 256, kernel_size=3, stride=1, padding=1)
         self.latent_relu2 = nn.ReLU()
 
-        # Decoder
         self.decoder_upsample1 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2)
         self.decoder_relu1 = nn.ReLU()
 
@@ -83,7 +77,6 @@ class AutoencoderWithSkipConnections(nn.Module):
         self.decoder_sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        # Encoder with skip connections
         skip1 = self.encoder_relu1(self.encoder_conv1(x))
         x = self.encoder_pool1(skip1)
 
@@ -93,11 +86,9 @@ class AutoencoderWithSkipConnections(nn.Module):
         skip3 = self.encoder_relu3(self.encoder_conv3(x))
         x = self.encoder_pool3(skip3)
 
-        # Latent space
         x = self.latent_relu1(self.latent_conv1(x))
         x = self.latent_relu2(self.latent_conv2(x))
 
-        # Decoder with skip connections
         x = self.decoder_relu1(self.decoder_upsample1(x))
 
         x = torch.cat((x, skip3), dim=1)  # Concatenate skip3
