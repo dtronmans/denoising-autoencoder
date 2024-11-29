@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from enum import Enum
 import random
+from tqdm import tqdm
 
 
 # Next step: open a window that lets you click on where the ends of the arrow should be
@@ -114,7 +115,7 @@ class DrawUtils:
         return image_copy
 
     @staticmethod
-    def remove_template_match(image, template_match_path, threshold=0.8):
+    def remove_template_match(image, template_match_path, threshold=0.8, color=(255, 255, 255)):
         template = cv2.imread(template_match_path, cv2.IMREAD_COLOR)
         if template is None:
             raise FileNotFoundError(f"Template file not found: {template_match_path}")
@@ -132,7 +133,7 @@ class DrawUtils:
                 processed_image,
                 pt,
                 (pt[0] + template_width, pt[1] + template_height),
-                (255, 255, 255),
+                color,
                 -1
             )
 
@@ -146,7 +147,7 @@ class DrawUtils:
         try:
             point1, _ = ovarian_points
 
-            text = random.choice(["Rt. Ovary", "LL Ovary"])
+            text = random.choice(["Rt. Ovary", "LL Ovary", "Li Ov"])
             font = cv2.FONT_HERSHEY_SIMPLEX
             font_scale = 1
             font_thickness = 2
@@ -165,16 +166,18 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    path_clean = os.path.join("rdg_set", "clean")
-    path_annotated = os.path.join("rdg_set", "annotated")
-    template_path = "rdg_set/template_match.png"
+    path_clean = os.path.join("train_set", "clean")
+    path_annotated = os.path.join("train_set", "annotated")
+    template_path = "train_set/template_match.png"
+    template_path_2 = "train_set/template_match_2.png"
 
-    for file in os.listdir(path_clean):
+    for file in tqdm(os.listdir(path_clean)):
         image = cv2.imread(os.path.join(path_clean, file))
         processed_image = DrawUtils.remove_template_match(image, template_path)
+        processed_image = DrawUtils.remove_template_match(processed_image, template_path_2, color=(0, 0, 0))
         ovarian_mask = DrawUtils.find_ovaries(processed_image, display_contour=False)
         ovarian_mask_2 = DrawUtils.find_ovaries(processed_image, display_contour=False)
-        processed_image = DrawUtils.random_draw_text(processed_image, ovarian_mask)
+        processed_image = DrawUtils.random_draw_text(processed_image, ovarian_mask, chance=0.8)
         drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, Color.WHITE, num_dots=60,
                                             interactive_mode=False)
         cv2.imwrite(os.path.join(path_annotated, file), drawn_image)

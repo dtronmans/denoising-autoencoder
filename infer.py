@@ -45,8 +45,8 @@ def infer(image_path, show=True):
 
 if __name__ == "__main__":
     # infer("dataset/all/92.JPG", model=Model.SKIPNET)
-    path = os.path.join("LUMC_clean", "benign")
+    path = os.path.join("LUMC_clean", "malignant")
 
     for image in os.listdir(path):
         cleaned_image = infer(os.path.join(path, image), show=False)
-        cv2.imwrite(os.path.join("LUMC_clean_inferred/benign", image), cleaned_image)
+        cv2.imwrite(os.path.join("LUMC_clean_inferred/malignant", image), cleaned_image)

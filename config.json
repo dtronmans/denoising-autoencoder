@@ -11,7 +11,7 @@
   },
   "dataset": {
     "dataset": "UltrasoundDataset",
-    "dataset_path": "rdg_set",
+    "dataset_path": "train_set",
     "clean_images_txt": "rdg_clean.txt"
   },
   "draw": {
