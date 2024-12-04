@@ -4,6 +4,7 @@ import numpy as np
 from torchvision import transforms
 import cv2
 import os
+from tqdm import tqdm
 
 from config import Config
 
@@ -45,8 +46,8 @@ def infer(image_path, show=True):
 
 if __name__ == "__main__":
     # infer("dataset/all/92.JPG", model=Model.SKIPNET)
-    path = os.path.join("LUMC_clean", "malignant")
+    path = os.path.join("LUMC_util_png", "malignant")
 
-    for image in os.listdir(path):
-        cleaned_image = infer(os.path.join(path, image), show=False)
-        cv2.imwrite(os.path.join("LUMC_clean_inferred/malignant", image), cleaned_image)
+    for image in tqdm(os.listdir(path)):
+        cleaned_image = infer(os.path.join(path, image), show=True)
+        cv2.imwrite(os.path.join("LUMC_util_png_inferred/malignant", image), cleaned_image)

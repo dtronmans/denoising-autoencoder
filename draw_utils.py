@@ -7,8 +7,6 @@ import random
 from tqdm import tqdm
 
 
-# Next step: open a window that lets you click on where the ends of the arrow should be
-
 class Color(Enum):
     WHITE = (255, 255, 255)
     YELLOW = (0, 255, 255)
@@ -67,7 +65,7 @@ class DrawUtils:
         def click_event(event, x, y, flags, param):
             nonlocal selected_points
             if event == cv2.EVENT_LBUTTONDOWN:
-                selected_points.append((y, x))  # Append as (row, col)
+                selected_points.append((y, x))
                 cv2.drawMarker(image_copy, (x, y), (0, 0, 255), cv2.MARKER_CROSS, 10, 2)
                 cv2.imshow("Select two points", image_copy)
 
