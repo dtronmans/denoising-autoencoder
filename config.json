@@ -7,7 +7,7 @@
     "lr": 0.001,
     "batch_size": 4,
     "val_split": 0.1,
-    "architecture": "AutoencoderWithSkipConnections"
+    "architecture": "Autoencoder"
   },
   "dataset": {
     "dataset": "UltrasoundDataset",

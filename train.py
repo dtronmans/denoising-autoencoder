@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 
 from config import Config
-from architectures import AutoencoderWithSkipConnections
+from architectures import AutoencoderWithSkipConnections, Autoencoder
 from losses import WeightedLoss
 
 from torch.utils.tensorboard import SummaryWriter
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     config = Config("config.json")
     writer = SummaryWriter()
 
-    model = AutoencoderWithSkipConnections()
+    model = Autoencoder()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 

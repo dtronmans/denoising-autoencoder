@@ -165,5 +165,7 @@ cython_debug/
 *.JPG
 *.jpeg
 *.png
+*.tif
+*.TIF
 
 runs/
