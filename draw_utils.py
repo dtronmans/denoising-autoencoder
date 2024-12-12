@@ -174,8 +174,8 @@ if __name__ == "__main__":
         processed_image = DrawUtils.remove_template_match(image, template_path)
         processed_image = DrawUtils.remove_template_match(processed_image, template_path_2, color=(0, 0, 0))
         ovarian_mask = DrawUtils.find_ovaries(processed_image, display_contour=False)
-        ovarian_mask_2 = DrawUtils.find_ovaries(processed_image, display_contour=False)
+        ovarian_mask_2 = DrawUtils.find_ovaries(processed_image, display_contour=True)
         processed_image = DrawUtils.random_draw_text(processed_image, ovarian_mask, chance=0.6)
         drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, Color.WHITE, num_dots=60,
-                                            interactive_mode=True)
+                                            interactive_mode=False)
         cv2.imwrite(os.path.join(path_annotated, file), drawn_image)

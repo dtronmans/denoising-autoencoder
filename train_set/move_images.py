@@ -2,7 +2,7 @@ import os
 import shutil
 
 if __name__ == "__main__":
-    txt_file = "../rdg_clean.txt"
+    txt_file = "../util_txt/rdg_clean.txt"
 
     with open(txt_file) as file:
         lines = file.readlines()
