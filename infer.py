@@ -11,13 +11,13 @@ from config import Config
 
 def infer(image_path, show=True):
     config = Config("config.json")
-    config.architecture.load_state_dict(torch.load("model3.pt", weights_only=True))
+    config.architecture.load_state_dict(torch.load("model384_384.pt", weights_only=True))
     config.architecture.eval()
 
     # Load and transform the input image
     image = Image.open(image_path).convert("L")
     transform = transforms.Compose([
-        transforms.Resize((config.resize_size, config.resize_size)),
+        transforms.Resize((384, 384)),
         transforms.ToTensor()
     ])
 
@@ -31,7 +31,7 @@ def infer(image_path, show=True):
     image_output = (image_output * 255).astype(np.uint8)
 
     # Convert the original image to a NumPy array for side-by-side display
-    original_image = np.array(image.resize((config.resize_size, config.resize_size)))
+    original_image = np.array(image.resize((384, 384)))
 
     # Stack the original and predicted images side-by-side
     side_by_side = np.hstack((original_image, image_output))
@@ -46,10 +46,8 @@ def infer(image_path, show=True):
 
 if __name__ == "__main__":
     # infer("dataset/all/92.JPG", model=Model.SKIPNET)
-    path = os.path.join("all_datasets/LUMC_util_png", "malignant")
+    path = os.path.join("train_dataset_no_heatmap", "annotated")
 
     for image in tqdm(os.listdir(path)):
         cleaned_image = infer(os.path.join(path, image), show=True)
-        cv2.imwrite(os.path.join("all_datasets/LUMC_util_png_inferred/malignant", image), cleaned_image)
-        print(image)
-        break
+        # cv2.imwrite(os.path.join("all_datasets/LUMC_util_png_inferred/malignant", image), cleaned_image)

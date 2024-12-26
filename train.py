@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 import torch
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
@@ -34,7 +36,7 @@ if __name__ == "__main__":
         model.train()
         train_loss = 0.0
 
-        for batch in train_loader:
+        for batch in tqdm(train_loader):
             annotated = batch['annotated']
             clean = batch['clean']
 
@@ -52,7 +54,7 @@ if __name__ == "__main__":
         model.eval()
         val_loss = 0.0
         with torch.no_grad():
-            for batch in val_loader:
+            for batch in tqdm(val_loader):
                 annotated = batch['annotated']
                 clean = batch['clean']
 
@@ -65,5 +67,5 @@ if __name__ == "__main__":
         writer.add_scalar("Denoising Loss/val", val_loss, epoch)
         print(f"Epoch {epoch}, Validation Loss: {val_loss}")
 
-    torch.save(model.state_dict(), "model3.pt")
+    torch.save(model.state_dict(), "model384_384.pt")
     writer.flush()

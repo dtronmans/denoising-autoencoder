@@ -3,7 +3,7 @@ import json
 from torchvision.transforms import transforms
 
 from architectures import Autoencoder, AutoencoderWithSkipConnections
-from datasets import UltrasoundDataset, UltrasoundDatasetInPlaceArrows, RdGUltrasoundDataset
+from datasets import UltrasoundDataset
 
 
 class Config:
@@ -44,16 +44,12 @@ class Config:
 
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
-            transforms.Resize((self.resize_size, self.resize_size)),  # Resize to a fixed size
+            transforms.Resize((384, 384)),  # Resize to a fixed size
             transforms.ToTensor(),  # Convert to tensor
         ])
 
         if self.dataset == "UltrasoundDataset":
             self.dataset = UltrasoundDataset(self.dataset_path, transforms=self.transforms)
-        elif self.dataset == "UltrasoundDatasetInPlaceArrows":
-            self.dataset = UltrasoundDatasetInPlaceArrows(self.dataset_path, transforms=self.transforms)
-        elif self.dataset == "RdGUltrasoundDataset":
-            self.dataset = RdGUltrasoundDataset(self.dataset_path, self.clean_images_txt, transforms=self.transforms)
         else:
             raise ValueError("Not a correct selected dataset")
 

@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from enum import Enum
 import random
-from tqdm import tqdm
 
 
 class Color(Enum):
@@ -27,9 +26,9 @@ class DrawUtils:
     @staticmethod
     def find_ovaries(image, display_contour=True):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        _, thresh = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
+        _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
 
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         if len(contours) == 0:
             raise ValueError("No non-white regions found in the image.")
@@ -37,7 +36,7 @@ class DrawUtils:
         height, width = gray.shape
         center = (width // 2, height // 2)
 
-        contours = sorted(contours, key=lambda cnt: cv2.pointPolygonTest(cnt, center, True))
+        contours = sorted(contours, key=cv2.contourArea, reverse=True)
         ovary_contour = contours[0]
 
         if display_contour:
@@ -113,31 +112,6 @@ class DrawUtils:
         return image_copy
 
     @staticmethod
-    def remove_template_match(image, template_match_path, threshold=0.8, color=(255, 255, 255)):
-        template = cv2.imread(template_match_path, cv2.IMREAD_COLOR)
-        if template is None:
-            raise FileNotFoundError(f"Template file not found: {template_match_path}")
-
-        template_height, template_width = template.shape[:2]
-
-        result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
-
-        loc = np.where(result >= threshold)
-
-        processed_image = image.copy()
-
-        for pt in zip(*loc[::-1]):
-            cv2.rectangle(
-                processed_image,
-                pt,
-                (pt[0] + template_width, pt[1] + template_height),
-                color,
-                -1
-            )
-
-        return processed_image
-
-    @staticmethod
     def random_draw_text(image, ovarian_points, chance=1.0):
         if random.random() > chance:
             return image
@@ -159,23 +133,47 @@ class DrawUtils:
         return image
 
     @staticmethod
+    def random_draw_heatmap(image):
+        heatmap_png_path = "heatmap.png"
+
+        if random.random() < 0.5:
+            return image
+
+        heatmap = cv2.imread(heatmap_png_path, cv2.IMREAD_UNCHANGED)
+
+        heatmap_height, heatmap_width = heatmap.shape[:2]
+        image_height, image_width = image.shape[:2]
+        x_offset = int((image_width - heatmap_width) // 1.1)
+        y_offset = (image_height - heatmap_height) // 4
+
+        alpha_channel = heatmap[:, :, 3] / 255.0
+        alpha_mask = cv2.merge([alpha_channel, alpha_channel, alpha_channel])
+        region = image[y_offset:y_offset + heatmap_height, x_offset:x_offset + heatmap_width]
+        heatmap_rgb = heatmap[:, :, :3]
+        blended_region = cv2.convertScaleAbs(
+            alpha_mask * heatmap_rgb + (1 - alpha_mask) * region
+        )
+
+        image[y_offset:y_offset + heatmap_height, x_offset:x_offset + heatmap_width] = blended_region
+
+        return image
+
+    @staticmethod
     def draw_bounding_box(image):
         return
 
 
 if __name__ == "__main__":
-    path_clean = os.path.join("train_set", "clean")
-    path_annotated = os.path.join("train_set", "annotated")
-    template_path = "train_set/template_match.png"
-    template_path_2 = "train_set/template_match_2.png"
+    dataset_path = "train_dataset_no_heatmap"
+    path_clean = os.path.join(dataset_path, "clean")
+    path_annotated = os.path.join(dataset_path, "annotated")
 
-    for file in tqdm(os.listdir(path_clean)):
-        image = cv2.imread(os.path.join(path_clean, file))
-        processed_image = DrawUtils.remove_template_match(image, template_path)
-        processed_image = DrawUtils.remove_template_match(processed_image, template_path_2, color=(0, 0, 0))
-        ovarian_mask = DrawUtils.find_ovaries(processed_image, display_contour=False)
-        ovarian_mask_2 = DrawUtils.find_ovaries(processed_image, display_contour=True)
-        processed_image = DrawUtils.random_draw_text(processed_image, ovarian_mask, chance=0.6)
+    for filename in os.listdir(path_clean):
+        image = cv2.imread(os.path.join(path_clean, filename))
+        ovarian_mask = DrawUtils.find_ovaries(image, display_contour=False)
+        ovarian_mask_2 = DrawUtils.find_ovaries(image, display_contour=False)
+        processed_image = DrawUtils.random_draw_text(image, ovarian_mask, chance=0.6)
+        processed_image = DrawUtils.random_draw_heatmap(processed_image)
         drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, Color.WHITE, num_dots=60,
                                             interactive_mode=False)
-        cv2.imwrite(os.path.join(path_annotated, file), drawn_image)
+        cv2.imwrite(os.path.join(path_annotated, filename), drawn_image)
