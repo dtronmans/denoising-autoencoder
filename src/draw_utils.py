@@ -134,7 +134,7 @@ class DrawUtils:
 
     @staticmethod
     def random_draw_heatmap(image):
-        heatmap_png_path = "media/heatmap.png"
+        heatmap_png_path = "../media/heatmap.png"
 
         # if random.random() < 0.5:
         #     return image
@@ -166,7 +166,7 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    dataset_path = "train_dataset_no_heatmap"
+    dataset_path = "../train_dataset_no_heatmap"
     path_clean = os.path.join(dataset_path, "clean")
     path_annotated = os.path.join(dataset_path, "annotated")
 

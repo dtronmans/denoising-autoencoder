@@ -6,12 +6,12 @@ import cv2
 import os
 from tqdm import tqdm
 
-from config import Config
+from src.config import Config
 
 
 def infer(image_path, show=True):
     config = Config("config.json")
-    config.architecture.load_state_dict(torch.load("model384_384.pt", weights_only=True))
+    config.architecture.load_state_dict(torch.load("../model384_384.pt", weights_only=True))
     config.architecture.eval()
 
     # Load and transform the input image
@@ -46,7 +46,7 @@ def infer(image_path, show=True):
 
 if __name__ == "__main__":
     # infer("dataset/all/92.JPG", model=Model.SKIPNET)
-    path = os.path.join("train_dataset_no_heatmap", "annotated")
+    path = os.path.join("../train_dataset_no_heatmap", "annotated")
 
     for image in tqdm(os.listdir(path)):
         cleaned_image = infer(os.path.join(path, image), show=True)

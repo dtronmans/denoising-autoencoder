@@ -1,17 +1,18 @@
 from tqdm import tqdm
+import os
 
 import torch
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 
-from config import Config
-from losses import WeightedLoss
+from src.config import Config
+from src.losses import WeightedLoss
 
 from torch.utils.tensorboard import SummaryWriter
 
 if __name__ == "__main__":
-    config = Config("config.json")
+    config = Config(os.path.join("src", "config.json"))
     writer = SummaryWriter()
 
     model = config.architecture
@@ -67,5 +68,5 @@ if __name__ == "__main__":
         writer.add_scalar("Denoising Loss/val", val_loss, epoch)
         print(f"Epoch {epoch}, Validation Loss: {val_loss}")
 
-    torch.save(model.state_dict(), "model384_384.pt")
+    torch.save(model.state_dict(), "../model384_384.pt")
     writer.flush()

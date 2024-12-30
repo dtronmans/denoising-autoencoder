@@ -2,8 +2,8 @@ import json
 
 from torchvision.transforms import transforms
 
-from architectures import Autoencoder, AutoencoderWithSkipConnections
-from datasets import UltrasoundDataset
+from src.architectures import Autoencoder, AutoencoderWithSkipConnections
+from src.datasets import UltrasoundDataset
 
 
 class Config:

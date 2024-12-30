@@ -2,7 +2,7 @@
 
 Medical scans sometimes come with annotations drawn by the radiologist or doctor. These annotations can act as confounders for a deep learning method that aims to classify or segment these images.
 
-For example, if radiologists draw
+For example, if radiologists draw arrows that point to benign tumors, the 
 
 ## Example
 
