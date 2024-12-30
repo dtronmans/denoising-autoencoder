@@ -3,8 +3,6 @@ import torch.nn as nn
 import pytorch_msssim
 
 
-# TODO: define combined classification and denoising loss
-
 class CombinedLoss(nn.Module):
     def __init__(self, lambda_denoise=1.0, lambda_classify=1.0):
         super(CombinedLoss, self).__init__()

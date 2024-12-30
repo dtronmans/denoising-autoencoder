@@ -170,5 +170,5 @@ cython_debug/
 
 *.pt
 
-!heatmap.png
+!media/*
 runs/

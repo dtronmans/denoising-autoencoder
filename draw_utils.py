@@ -134,7 +134,7 @@ class DrawUtils:
 
     @staticmethod
     def random_draw_heatmap(image):
-        heatmap_png_path = "heatmap.png"
+        heatmap_png_path = "media/heatmap.png"
 
         # if random.random() < 0.5:
         #     return image
