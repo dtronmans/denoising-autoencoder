@@ -3,7 +3,7 @@
     "loss_alpha": 100.0,
     "loss_beta": 1.0,
     "resize_size": 256,
-    "epochs": 80,
+    "epochs": 150,
     "lr": 0.001,
     "batch_size": 4,
     "val_split": 0.1,

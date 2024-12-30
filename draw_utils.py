@@ -136,15 +136,17 @@ class DrawUtils:
     def random_draw_heatmap(image):
         heatmap_png_path = "heatmap.png"
 
-        if random.random() < 0.5:
-            return image
+        # if random.random() < 0.5:
+        #     return image
 
         heatmap = cv2.imread(heatmap_png_path, cv2.IMREAD_UNCHANGED)
-
+        heatmap_height, heatmap_width = heatmap.shape[:2]
+        heatmap = cv2.resize(heatmap, (int(heatmap_width * 0.6), int(heatmap_height * 0.6)))
         heatmap_height, heatmap_width = heatmap.shape[:2]
         image_height, image_width = image.shape[:2]
-        x_offset = int((image_width - heatmap_width) // 1.1)
-        y_offset = (image_height - heatmap_height) // 4
+
+        x_offset = int((image_width - heatmap_width) // 1.05)
+        y_offset = (image_height - heatmap_height) // 6
 
         alpha_channel = heatmap[:, :, 3] / 255.0
         alpha_mask = cv2.merge([alpha_channel, alpha_channel, alpha_channel])
