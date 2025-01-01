@@ -1,17 +1,17 @@
 {
   "training": {
-    "loss_alpha": 100.0,
+    "loss_alpha": 60.0,
     "loss_beta": 1.0,
     "resize_size": 256,
     "epochs": 150,
     "lr": 0.001,
-    "batch_size": 4,
+    "batch_size": 8,
     "val_split": 0.1,
     "architecture": "AutoencoderWithSkipConnections"
   },
   "dataset": {
     "dataset": "UltrasoundDataset",
-    "dataset_path": "train_dataset_no_heatmap",
+    "dataset_path": "/exports/lkeb-hpc/dzrogmans/train_dataset_no_heatmap",
     "clean_images_txt": "rdg_clean.txt"
   },
   "draw": {

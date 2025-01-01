@@ -166,7 +166,7 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    dataset_path = "../train_dataset_no_heatmap"
+    dataset_path = "../mmotu"
     path_clean = os.path.join(dataset_path, "clean")
     path_annotated = os.path.join(dataset_path, "annotated")
 
