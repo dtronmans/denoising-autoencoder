@@ -38,8 +38,8 @@ if __name__ == "__main__":
         train_loss = 0.0
 
         for batch in tqdm(train_loader):
-            annotated = batch['annotated']
-            clean = batch['clean']
+            annotated = batch['annotated'].to(device)
+            clean = batch['clean'].to(device)
 
             optimizer.zero_grad()
             predicted = model(annotated)
@@ -56,8 +56,8 @@ if __name__ == "__main__":
         val_loss = 0.0
         with torch.no_grad():
             for batch in tqdm(val_loader):
-                annotated = batch['annotated']
-                clean = batch['clean']
+                annotated = batch['annotated'].to(device)
+                clean = batch['clean'].to(device)
 
                 predicted = model(annotated)
 
