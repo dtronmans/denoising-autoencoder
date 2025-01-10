@@ -18,9 +18,27 @@ Image from MMOTU with example of removing annotation
 
 ## How it works
 
+### Training process
+
 Given a dataset that has clean images (medical scans without annotations) and noisy images (medical scans with annotations), 
 
 <img src="./media/process.png"/>
+
+### Some examples
+
+
+<table>
+    <tr>
+        <th>Original image</th>
+        <th>Inferred (removed annotations)</th>
+    </tr>
+    <tr>
+        <td><img src="./media/result_one_before.png"/></td>
+        <td><img src="media/result_one_after.png"/></td>
+    </tr>
+</table>
+
+
 
 ## Installation
 
