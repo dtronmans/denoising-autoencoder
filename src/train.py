@@ -68,5 +68,5 @@ if __name__ == "__main__":
         writer.add_scalar("Denoising Loss/val", val_loss, epoch)
         print(f"Epoch {epoch}, Validation Loss: {val_loss}")
 
-    torch.save(model.state_dict(), "../model384_384.pt")
+    torch.save(model.state_dict(), "model384_384.pt")
     writer.flush()

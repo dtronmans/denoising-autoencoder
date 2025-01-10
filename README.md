@@ -48,19 +48,23 @@ The image names in both directories should be the same (corresponding image pair
 
 Training: python -m src.train
 
-Inference:
+Visualize curves during training: in a separate console, run <em>tensorboard --logdir=runs</em> and navigate to localhost:6006 in a browser window.
+
+Inference: python -m src.inference
+
+For inference, make sure to change the dataset path and the model path in src/infer.py.
 
 ## Config parameters
 
 ### Training parameters:
 
 <ul>
-    <li><em>loss_alpha:</em></li> Weighted loss term for annotated (foreground) parts of the image
-    <li><em>loss_beta:</em></li> Weighted loss term for background parts of the image
-    <li><em>resize_size:</em></li> Dimensions to resize the image
-    <li><em>epochs:</em></li> Number of epochs
-    <li><em>lr:</em></li> learning rate (optimizer is SGD with momentum)
-    <li><em>batch_size:</em></li> batch size
-    <li><em>val_split:</em></li> Between 0 and 1, ratio of images in the validation set
-    <li><em>Architecture:</em></li> Either Autoencoder, or AutoencoderWithSkipConnections. Note that some higher-frequency information from the original image could be lost if you opt for Autoencoder instead of AutoencoderWithSkipConnections.
+    <li><em>loss_alpha: </em>Weighted loss term for annotated (foreground) parts of the image</li>
+    <li><em>loss_beta: </em>Weighted loss term for background parts of the image</li> 
+    <li><em>resize_size: </em>Dimensions to resize the image</li> 
+    <li><em>epochs: </em>Number of epochs</li> 
+    <li><em>lr: </em>learning rate (optimizer is SGD with momentum)</li> 
+    <li><em>batch_size: </em>batch size</li>
+    <li><em>val_split: </em>Between 0 and 1, ratio of images in the validation set</li>
+    <li><em>Architecture: </em>Either Autoencoder, or AutoencoderWithSkipConnections. Note that some higher-frequency information from the original image could be lost if you opt for Autoencoder instead of AutoencoderWithSkipConnections.</li>
 </ul>

@@ -45,7 +45,6 @@ def infer(image_path, show=True):
 
 
 if __name__ == "__main__":
-    # infer("dataset/all/92.JPG", model=Model.SKIPNET)
     path = os.path.join("train_set", "all")
 
     for image in tqdm(os.listdir(path)):

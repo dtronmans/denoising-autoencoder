@@ -70,7 +70,6 @@ class DAELosses(nn.Module):
 class WeightedLoss(nn.Module):
     def __init__(self, alpha=5.0, beta=1.0):
         """
-        Weighted loss for denoising autoencoder.
         Args:
             alpha (float): Weight for the arrow (corrupted) pixels.
             beta (float): Weight for the background pixels.
