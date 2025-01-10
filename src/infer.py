@@ -11,7 +11,7 @@ from src.config import Config
 
 def infer(image_path, show=True):
     config = Config(os.path.join("src", "config.json"))
-    config.architecture.load_state_dict(torch.load("model384_384.pt", weights_only=True))
+    config.architecture.load_state_dict(torch.load("model384_384.pt", weights_only=True, map_location=torch.device('cpu')))
     config.architecture.eval()
 
     # Load and transform the input image

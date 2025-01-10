@@ -166,7 +166,7 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    dataset_path = "../mmotu"
+    dataset_path = "denoising_dataset_final"
     path_clean = os.path.join(dataset_path, "clean")
     path_annotated = os.path.join(dataset_path, "annotated")
 
@@ -174,8 +174,11 @@ if __name__ == "__main__":
         image = cv2.imread(os.path.join(path_clean, filename))
         ovarian_mask = DrawUtils.find_ovaries(image, display_contour=False)
         ovarian_mask_2 = DrawUtils.find_ovaries(image, display_contour=False)
+        ovarian_mask_3 = DrawUtils.find_ovaries(image, display_contour=False)
         processed_image = DrawUtils.random_draw_text(image, ovarian_mask, chance=0.6)
-        processed_image = DrawUtils.random_draw_heatmap(processed_image)
+        # processed_image = DrawUtils.random_draw_heatmap(processed_image)
         drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, Color.WHITE, num_dots=60,
+                                            interactive_mode=False)
+        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, Color.WHITE, num_dots=60,
                                             interactive_mode=False)
         cv2.imwrite(os.path.join(path_annotated, filename), drawn_image)

@@ -11,7 +11,7 @@
   },
   "dataset": {
     "dataset": "UltrasoundDataset",
-    "dataset_path": "/exports/lkeb-hpc/dzrogmans/train_dataset_no_heatmap",
+    "dataset_path": "train_dataset_no_heatmap",
     "clean_images_txt": "rdg_clean.txt"
   },
   "draw": {

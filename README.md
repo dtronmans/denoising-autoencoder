@@ -18,6 +18,11 @@ The network is a standard U-Net that learns to map from
 
 ## Usage
 
+Dataset structure: folder with "clean" and "annotated" subdirectories.
+The image names in both directories should be the same (corresponding image pairs).
+
+Training: python -m src.train
+
 
 
 ## Config parameters
