@@ -44,7 +44,7 @@ class Config:
 
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
-            transforms.Resize((384, 384)),  # Resize to a fixed size
+            transforms.Resize((288, 512)),  # Resize to a fixed size
             transforms.ToTensor(),  # Convert to tensor
         ])
 
