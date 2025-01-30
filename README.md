@@ -32,6 +32,10 @@ To generate the dataset of artificially noised images, you need your custom draw
         <td><img src="./media/result_one_before.png"/></td>
         <td><img src="media/result_one_after.png"/></td>
     </tr>
+    <tr>
+        <td><img src="./media/result_3_1.png"/></td>
+        <td><img src="media/result_3_2.png"/></td>
+    </tr>
 </table>
 
 The network relies on a custom weighted loss function that I defined in losses.py. Since annotations are a very small part of the image, 
