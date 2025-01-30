@@ -10,16 +10,8 @@ class UltrasoundDataset(Dataset):
         self.clean_dir = os.path.join(dataset_path, "clean")
         self.transforms = transforms
 
-        if not os.path.isdir(self.annotated_dir) or not os.path.isdir(self.clean_dir):
-            raise FileNotFoundError(
-                "The dataset directory structure is incorrect. Expected 'annotated' and 'clean' subdirectories.")
-
         self.filenames = sorted(os.listdir(self.annotated_dir))
 
-        for file in self.filenames:
-            clean_path = os.path.join(self.clean_dir, file)
-            if not os.path.isfile(clean_path):
-                raise FileNotFoundError(f"Missing corresponding clean file for {file} in 'clean' directory.")
 
     def __len__(self):
         return len(self.filenames)

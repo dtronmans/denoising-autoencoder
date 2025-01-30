@@ -10,7 +10,7 @@
     "architecture": "AutoencoderWithSkipConnections"
   },
   "dataset": {
-    "dataset": "/exports/lkeb-hpc/dzrogmans/denoising_dataset_final",
+    "dataset": "UltrasoundDataset",
     "dataset_path": "train_dataset_no_heatmap",
     "clean_images_txt": "rdg_clean.txt"
   },

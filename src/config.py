@@ -44,8 +44,8 @@ class Config:
 
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
-            transforms.Resize((288, 512)),  # Resize to a fixed size
-            transforms.ToTensor(),  # Convert to tensor
+            transforms.Resize((288, 512)),
+            transforms.ToTensor(),
         ])
 
         if self.dataset == "UltrasoundDataset":

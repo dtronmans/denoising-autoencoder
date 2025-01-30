@@ -166,7 +166,7 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    dataset_path = "denoising_dataset_final"
+    dataset_path = "draw"
     path_clean = os.path.join(dataset_path, "clean")
     path_annotated = os.path.join(dataset_path, "annotated")
 

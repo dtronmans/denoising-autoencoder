@@ -11,29 +11,24 @@ from src.config import Config
 
 def infer(image_path, show=True):
     config = Config(os.path.join("src", "config.json"))
-    config.architecture.load_state_dict(torch.load("model384_384.pt", weights_only=True, map_location=torch.device('cpu')))
+    config.architecture.load_state_dict(torch.load("denoiser_288_512_5_1_larger_dataset.pt", weights_only=True, map_location=torch.device('cpu')))
     config.architecture.eval()
 
-    # Load and transform the input image
     image = Image.open(image_path).convert("L")
     transform = transforms.Compose([
-        transforms.Resize((384, 384)),
+        transforms.Resize((288, 512)),
         transforms.ToTensor()
     ])
 
     image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
 
-    # Get the output from the model
     output = config.architecture(image_tensor)
 
-    # Convert the output to a displayable format
     image_output = output.detach().cpu().numpy().squeeze()
     image_output = (image_output * 255).astype(np.uint8)
 
-    # Convert the original image to a NumPy array for side-by-side display
-    original_image = np.array(image.resize((384, 384)))
+    original_image = np.array(image.resize((512, 288)))
 
-    # Stack the original and predicted images side-by-side
     side_by_side = np.hstack((original_image, image_output))
 
     if show:
