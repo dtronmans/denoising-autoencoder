@@ -38,7 +38,7 @@ To generate the dataset of artificially noised images, you need your custom draw
     </tr>
 </table>
 
-The network relies on a custom weighted loss function that I defined in losses.py. Since annotations are a very small part of the image, 
+The network relies on a custom weighted loss function that I defined in losses.py. Since annotations occupy a small part of the image, a simple cross-entropy or MSE loss, which does not inherently address class imbalance, may lead to suboptimal performance.
 
 ## Installation
 
