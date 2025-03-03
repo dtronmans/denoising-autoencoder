@@ -57,4 +57,4 @@ class Config:
         if self.architecture == "Autoencoder":
             self.architecture = Autoencoder(3)
         elif self.architecture == "AutoencoderWithSkipConnections":
-            self.architecture = AutoencoderWithSkipConnections()
+            self.architecture = AutoencoderWithSkipConnections(3)

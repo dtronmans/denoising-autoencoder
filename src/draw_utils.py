@@ -183,8 +183,8 @@ if __name__ == "__main__":
             draw_color = Color.LIGHT_BLUE
         elif random_number > 0.3 and random_number < 0.66:
             draw_color = Color.YELLOW
-        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, draw_color, num_dots=100,
+        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, draw_color, num_dots=60,
                                             interactive_mode=True)
-        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, draw_color, num_dots=100,
+        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, draw_color, num_dots=60,
                                             interactive_mode=True)
         cv2.imwrite(os.path.join(path_annotated, filename), drawn_image)

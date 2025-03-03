@@ -47,10 +47,10 @@ class Autoencoder(nn.Module):
 
 
 class AutoencoderWithSkipConnections(nn.Module):
-    def __init__(self):
+    def __init__(self, num_channels):
         super(AutoencoderWithSkipConnections, self).__init__()
 
-        self.encoder_conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1)
+        self.encoder_conv1 = nn.Conv2d(num_channels, 64, kernel_size=3, stride=1, padding=1)
         self.encoder_relu1 = nn.ReLU()
         self.encoder_pool1 = nn.MaxPool2d(2, 2)
 
