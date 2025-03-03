@@ -44,8 +44,9 @@ class Config:
 
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
-            transforms.Resize((288, 512)),
+            transforms.Resize((384, 672)),
             transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
         if self.dataset == "UltrasoundDataset":
@@ -54,6 +55,6 @@ class Config:
             raise ValueError("Not a correct selected dataset")
 
         if self.architecture == "Autoencoder":
-            self.architecture = Autoencoder()
+            self.architecture = Autoencoder(3)
         elif self.architecture == "AutoencoderWithSkipConnections":
             self.architecture = AutoencoderWithSkipConnections()

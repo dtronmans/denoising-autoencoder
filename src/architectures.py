@@ -4,11 +4,11 @@ import torch.optim as optim
 
 
 class Autoencoder(nn.Module):
-    def __init__(self):
+    def __init__(self, num_channels):
         super(Autoencoder, self).__init__()
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(num_channels, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
 
