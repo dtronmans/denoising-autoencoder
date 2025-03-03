@@ -50,6 +50,7 @@ if __name__ == "__main__":
             optimizer.step()
 
         writer.add_scalar("Denoising Loss/train", loss, epoch)
+        loss = loss * 100
         print(f"Epoch {epoch}, Train Loss: {loss.item():.2f}")
 
         model.eval()
@@ -66,6 +67,7 @@ if __name__ == "__main__":
 
         val_loss /= len(val_loader)
         writer.add_scalar("Denoising Loss/val", val_loss, epoch)
+        val_loss = val_loss * 100
         print(f"Epoch {epoch}, Validation Loss: {val_loss:.2f}")
 
     torch.save(model.state_dict(), "model384_384.pt")

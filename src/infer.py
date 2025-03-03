@@ -11,12 +11,12 @@ from src.config import Config
 
 def infer(image_path, show=True):
     config = Config(os.path.join("src", "config.json"))
-    config.architecture.load_state_dict(torch.load("denoiser_288_512_5_1_larger_dataset.pt", weights_only=True, map_location=torch.device('cpu')))
+    config.architecture.load_state_dict(torch.load("model384_672.pt", weights_only=True, map_location=torch.device('cpu')))
     config.architecture.eval()
 
-    image = Image.open(image_path).convert("L")
+    image = Image.open(image_path).convert("RGB")
     transform = transforms.Compose([
-        transforms.Resize((288, 512)),
+        transforms.Resize((384, 672)),
         transforms.ToTensor()
     ])
 
@@ -27,7 +27,10 @@ def infer(image_path, show=True):
     image_output = output.detach().cpu().numpy().squeeze()
     image_output = (image_output * 255).astype(np.uint8)
 
-    original_image = np.array(image.resize((512, 288)))
+    if image_output.shape[0] == 3:
+        image_output = np.transpose(image_output, (1, 2, 0))
+
+    original_image = np.array(image.resize((672, 384)))
 
     side_by_side = np.hstack((original_image, image_output))
 

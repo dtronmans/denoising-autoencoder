@@ -112,7 +112,7 @@ class DrawUtils:
         return image_copy
 
     @staticmethod
-    def random_draw_text(image, ovarian_points, chance=1.0):
+    def random_draw_text(image, ovarian_points, chance=1.0, text_color=Color.WHITE):
         if random.random() > chance:
             return image
 
@@ -124,8 +124,8 @@ class DrawUtils:
             font_scale = 1
             font_thickness = 2
 
-            text_color = (0, 255, 255)
-            cv2.putText(image, text, (point1[1], point1[0] - 10), font, font_scale, text_color, font_thickness)
+            cv2.putText(image, text, (point1[1], point1[0] - 10), font, font_scale,
+                        DrawUtils.color_to_palette(text_color), font_thickness)
 
         except ValueError as e:
             print(f"Error finding ovaries: {e}")
@@ -175,7 +175,13 @@ if __name__ == "__main__":
         ovarian_mask = DrawUtils.find_ovaries(image, display_contour=False)
         ovarian_mask_2 = DrawUtils.find_ovaries(image, display_contour=False)
         ovarian_mask_3 = DrawUtils.find_ovaries(image, display_contour=False)
-        processed_image = DrawUtils.random_draw_text(image, ovarian_mask, chance=0.6)
+        random_number = random.random()
+        draw_color = Color.WHITE
+        if random_number < 0.3:
+            draw_color = Color.LIGHT_BLUE
+        elif random_number > 0.3 and random_number < 0.66:
+            draw_color = Color.YELLOW
+        processed_image = DrawUtils.random_draw_text(image, ovarian_mask, chance=0.6, text_color=draw_color)
         # processed_image = DrawUtils.random_draw_heatmap(processed_image)
         random_number = random.random()
         draw_color = Color.WHITE
