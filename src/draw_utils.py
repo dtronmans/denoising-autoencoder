@@ -177,8 +177,14 @@ if __name__ == "__main__":
         ovarian_mask_3 = DrawUtils.find_ovaries(image, display_contour=False)
         processed_image = DrawUtils.random_draw_text(image, ovarian_mask, chance=0.6)
         # processed_image = DrawUtils.random_draw_heatmap(processed_image)
-        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, Color.WHITE, num_dots=60,
-                                            interactive_mode=False)
-        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, Color.WHITE, num_dots=60,
-                                            interactive_mode=False)
+        random_number = random.random()
+        draw_color = Color.WHITE
+        if random_number < 0.3:
+            draw_color = Color.LIGHT_BLUE
+        elif random_number > 0.3 and random_number < 0.66:
+            draw_color = Color.YELLOW
+        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, draw_color, num_dots=100,
+                                            interactive_mode=True)
+        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, draw_color, num_dots=100,
+                                            interactive_mode=True)
         cv2.imwrite(os.path.join(path_annotated, filename), drawn_image)
