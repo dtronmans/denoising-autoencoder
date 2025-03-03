@@ -69,25 +69,11 @@ class DAELosses(nn.Module):
 
 class WeightedLoss(nn.Module):
     def __init__(self, alpha=5.0, beta=1.0):
-        """
-        Args:
-            alpha (float): Weight for the arrow (corrupted) pixels.
-            beta (float): Weight for the background pixels.
-        """
         super(WeightedLoss, self).__init__()
         self.alpha = alpha
         self.beta = beta
 
     def forward(self, clean, annotated, predicted):
-        """
-        Compute the weighted loss.
-        Args:
-            clean (torch.Tensor): The clean images. Shape: (batch, 1, height, width)
-            annotated (torch.Tensor): The annotated (corrupted) images. Shape: (batch, 1, height, width)
-            predicted (torch.Tensor): The predicted (denoised) images. Shape: (batch, 1, height, width)
-        Returns:
-            torch.Tensor: The computed weighted loss (scalar).
-        """
         arrow_mask = (annotated != clean).float()  # Shape: (batch, 1, height, width)
 
         weight_map = self.alpha * arrow_mask + self.beta * (1 - arrow_mask)

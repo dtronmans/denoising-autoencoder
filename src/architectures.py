@@ -35,7 +35,7 @@ class Autoencoder(nn.Module):
             nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2),  # Upsample (B, 64, 64, 64)
             nn.ReLU(),
 
-            nn.ConvTranspose2d(64, 1, kernel_size=2, stride=2),  # Upsample (B, 1, 128, 128)
+            nn.ConvTranspose2d(64, 3, kernel_size=2, stride=2),  # Upsample (B, 1, 128, 128)
             nn.Sigmoid()
         )
 
@@ -73,7 +73,7 @@ class AutoencoderWithSkipConnections(nn.Module):
         self.decoder_upsample2 = nn.ConvTranspose2d(256 + 128, 64, kernel_size=2, stride=2)  # Skip connection
         self.decoder_relu2 = nn.ReLU()
 
-        self.decoder_upsample3 = nn.ConvTranspose2d(128 + 64, 1, kernel_size=2, stride=2)  # Skip connection
+        self.decoder_upsample3 = nn.ConvTranspose2d(128 + 64, 3, kernel_size=2, stride=2)  # Skip connection
         self.decoder_sigmoid = nn.Sigmoid()
 
     def forward(self, x):
