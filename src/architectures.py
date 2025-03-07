@@ -50,15 +50,30 @@ class AutoencoderWithSkipConnections(nn.Module):
     def __init__(self, num_channels):
         super(AutoencoderWithSkipConnections, self).__init__()
 
-        self.encoder_conv1 = nn.Conv2d(num_channels, 64, kernel_size=3, stride=1, padding=1)
+        self.encoder_conv1 = nn.Sequential(
+            nn.Conv2d(num_channels, 64, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+            nn.ReLU()
+        )
         self.encoder_relu1 = nn.ReLU()
         self.encoder_pool1 = nn.MaxPool2d(2, 2)
 
-        self.encoder_conv2 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
+        self.encoder_conv2 = nn.Sequential(
+            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
+            nn.ReLU()
+        )
         self.encoder_relu2 = nn.ReLU()
         self.encoder_pool2 = nn.MaxPool2d(2, 2)
 
-        self.encoder_conv3 = nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1)
+        self.encoder_conv3 = nn.Sequential(
+            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU()
+        )
         self.encoder_relu3 = nn.ReLU()
         self.encoder_pool3 = nn.MaxPool2d(2, 2)
 
