@@ -50,7 +50,7 @@ class JungUNet(nn.Module):
         x = self.up_conv_2(self.encoder_5(torch.cat([encoder_2_output, x], dim=1)))
         x = self.last_conv(self.encoder_6(torch.cat([encoder_1_output, x], dim=1)))
 
-        return x
+        return torch.sigmoid(x)
 
 
 if __name__ == "__main__":

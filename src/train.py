@@ -10,11 +10,8 @@ from torch.utils.data import DataLoader
 from src.config import Config
 from src.losses import WeightedLoss
 
-from torch.utils.tensorboard import SummaryWriter
-
 if __name__ == "__main__":
     config = Config(os.path.join("src", "config.json"))
-    writer = SummaryWriter()
 
     model = config.architecture
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -50,9 +47,9 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
-        writer.add_scalar("Denoising Loss/train", loss, epoch)
-        loss = loss * 100
-        print(f"Epoch {epoch}, Train Loss: {loss.item():.2f}")
+        train_loss /= len(train_loader)
+        train_loss = train_loss * 100
+        print(f"Epoch {epoch}, Train Loss: {train_loss:.2f}")
 
         model.eval()
         val_loss = 0.0
@@ -67,9 +64,7 @@ if __name__ == "__main__":
                 val_loss += loss.item()
 
         val_loss /= len(val_loader)
-        writer.add_scalar("Denoising Loss/val", val_loss, epoch)
         val_loss = val_loss * 100
         print(f"Epoch {epoch}, Validation Loss: {val_loss:.2f}")
 
     torch.save(model.state_dict(), "model384_384.pt")
-    writer.flush()
