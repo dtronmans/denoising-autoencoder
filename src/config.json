@@ -7,11 +7,11 @@
     "lr": 0.001,
     "batch_size": 8,
     "val_split": 0.1,
-    "architecture": "AutoencoderWithSkipConnections"
+    "architecture": "JungUNet"
   },
   "dataset": {
     "dataset": "UltrasoundDataset",
-    "dataset_path": "/exports/lkeb-hpc/dzrogmans/denoiser_dataset",
+    "dataset_path": "/exports/lkeb-hpd/dzrogmans/denoiser_dataset",
     "clean_images_txt": "rdg_clean.txt"
   },
   "draw": {

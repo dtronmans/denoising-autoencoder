@@ -4,6 +4,7 @@ from torchvision.transforms import transforms
 
 from src.architectures import Autoencoder, AutoencoderWithSkipConnections
 from src.datasets import UltrasoundDataset
+from src.jung_architecture import JungUNet
 
 
 class Config:
@@ -57,3 +58,5 @@ class Config:
             self.architecture = Autoencoder(3)
         elif self.architecture == "AutoencoderWithSkipConnections":
             self.architecture = AutoencoderWithSkipConnections(3)
+        elif self.architecture == "JungUNet":
+            self.architecture = JungUNet(3)

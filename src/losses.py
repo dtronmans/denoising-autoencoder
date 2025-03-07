@@ -74,13 +74,13 @@ class WeightedLoss(nn.Module):
         self.beta = beta
 
     def forward(self, clean, annotated, predicted):
-        arrow_mask = (annotated != clean).float()  # Shape: (batch, 1, height, width)
+        arrow_mask = (annotated != clean).float()
 
         weight_map = self.alpha * arrow_mask + self.beta * (1 - arrow_mask)
 
-        pixel_wise_error = (clean - predicted) ** 2  # Shape: (batch, 1, height, width)
+        pixel_wise_error = torch.abs(clean - predicted) ** 2
 
-        weighted_error = weight_map * pixel_wise_error  # Shape: (batch, 1, height, width)
+        weighted_error = weight_map * pixel_wise_error
         loss = weighted_error.sum() / weight_map.sum()
 
         return loss
