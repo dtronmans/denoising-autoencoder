@@ -53,6 +53,9 @@ class JungUNet(nn.Module):
         return torch.sigmoid(x)
 
 
+
+
+
 if __name__ == "__main__":
     image_path = "denoiser_dataset/clean/LUM00054_2.tif"
     image = Image.open(image_path).convert("RGB")

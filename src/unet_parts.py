@@ -94,9 +94,9 @@ class EncoderBlock(nn.Module):
         if intermediate_dims is None:
             intermediate_dims = out_dims
 
-        self.conv_1 = nn.Conv2d(in_dims, intermediate_dims, kernel_size=3, padding=1, bias=False)
+        self.conv_1 = ConvBlock(in_dims, intermediate_dims)
         self.seb_1 = SE_Block(intermediate_dims)
-        self.conv_2 = nn.Conv2d(intermediate_dims, out_dims, kernel_size=3, padding=1, bias=False)
+        self.conv_2 = ConvBlock(intermediate_dims, out_dims)
         self.seb_2 = SE_Block(out_dims)
 
     def forward(self, x):
@@ -105,6 +105,20 @@ class EncoderBlock(nn.Module):
         x = self.conv_2(x)
         x = self.seb_2(x)
 
+        return x
+
+
+class ConvBlock(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super(ConvBlock, self).__init__()
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=False)
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        x = self.conv(x)
+        x = self.bn(x)
+        x = self.relu(x)
         return x
 
 
@@ -134,4 +148,3 @@ class LatentBlock(nn.Module):
         x = self.up_conv(x)
 
         return x
-
