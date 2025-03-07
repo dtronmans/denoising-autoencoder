@@ -1,11 +1,9 @@
 import torch
-import torchvision
 from PIL import Image
 from torch import nn
-import torch.functional as F
 from torchvision import transforms
 
-from src.unet_parts import EncoderBlock, LatentBlock
+from src.unet_parts import EncoderBlock, LatentBlock, SE_Block
 
 
 class JungUNet(nn.Module):

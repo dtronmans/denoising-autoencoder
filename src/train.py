@@ -1,3 +1,4 @@
+from torch import nn
 from tqdm import tqdm
 import os
 
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 
-    losses = WeightedLoss(alpha=config.loss_alpha, beta=config.loss_beta)
+    losses = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
     num_epochs = config.epochs
@@ -43,7 +44,7 @@ if __name__ == "__main__":
 
             optimizer.zero_grad()
             predicted = model(annotated)
-            loss = losses(clean, annotated, predicted)
+            loss = losses(clean, predicted)
             train_loss += loss.item()
 
             loss.backward()
@@ -62,7 +63,7 @@ if __name__ == "__main__":
 
                 predicted = model(annotated)
 
-                loss = losses(clean, annotated, predicted)
+                loss = losses(clean, predicted)
                 val_loss += loss.item()
 
         val_loss /= len(val_loader)
