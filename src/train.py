@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
             optimizer.zero_grad()
             predicted = model(annotated)
-            loss = total_loss(clean, predicted)
+            loss = total_loss(predicted, clean)
             train_loss += loss.item()
 
             loss.backward()
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
                 predicted = model(annotated)
 
-                loss = total_loss(clean, predicted)
+                loss = total_loss(predicted, clean)
                 val_loss += loss.item()
 
         val_loss /= len(val_loader)
