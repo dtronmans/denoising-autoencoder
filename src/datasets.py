@@ -21,8 +21,8 @@ class UltrasoundDataset(Dataset):
         annotated_path = os.path.join(self.annotated_dir, filename)
         clean_path = os.path.join(self.clean_dir, filename)
 
-        annotated_image = Image.open(annotated_path).convert("RGB")
-        clean_image = Image.open(clean_path).convert("RGB")
+        annotated_image = Image.open(annotated_path).convert("L")
+        clean_image = Image.open(clean_path).convert("L")
 
         if self.transforms:
             annotated_image = self.transforms(annotated_image)

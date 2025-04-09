@@ -2,7 +2,7 @@ import json
 
 from torchvision.transforms import transforms
 
-from src.architectures import Autoencoder, AutoencoderWithSkipConnections
+from src.architectures import Autoencoder, AutoencoderWithSkipConnections, BasicUNet
 from src.datasets import UltrasoundDataset
 from src.jung_architecture import JungUNet
 
@@ -45,7 +45,7 @@ class Config:
 
     def parse_architecture_dataset(self):
         self.transforms = transforms.Compose([
-            transforms.Resize((384, 672)),
+            transforms.Resize((336, 544)),
             transforms.ToTensor()
         ])
 
@@ -60,3 +60,5 @@ class Config:
             self.architecture = AutoencoderWithSkipConnections(3)
         elif self.architecture == "JungUNet":
             self.architecture = JungUNet(3)
+        elif self.architecture == "BasicUNet":
+            self.architecture = BasicUNet(1, 1)

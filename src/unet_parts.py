@@ -1,7 +1,9 @@
 import torch
 import torchvision
 from torch import nn
-import torch.functional as F
+import torch.nn.functional as F
+
+
 
 
 class DoubleConv(nn.Module):

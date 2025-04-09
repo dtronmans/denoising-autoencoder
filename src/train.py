@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 
 from src.config import Config
-from src.losses import WeightedLoss
+from src.losses import total_loss
 
 if __name__ == "__main__":
     config = Config(os.path.join("src", "config.json"))
@@ -27,7 +27,6 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 
-    losses = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=config.lr)
 
     num_epochs = config.epochs
@@ -41,14 +40,14 @@ if __name__ == "__main__":
 
             optimizer.zero_grad()
             predicted = model(annotated)
-            loss = losses(clean, predicted)
+            loss = total_loss(clean, predicted)
             train_loss += loss.item()
 
             loss.backward()
             optimizer.step()
 
         train_loss /= len(train_loader)
-        train_loss = train_loss * 100
+        train_loss = train_loss * 10
         print(f"Epoch {epoch}, Train Loss: {train_loss:.2f}")
 
         model.eval()
@@ -60,11 +59,11 @@ if __name__ == "__main__":
 
                 predicted = model(annotated)
 
-                loss = losses(clean, predicted)
+                loss = total_loss(clean, predicted)
                 val_loss += loss.item()
 
         val_loss /= len(val_loader)
-        val_loss = val_loss * 100
+        val_loss = val_loss * 10
         print(f"Epoch {epoch}, Validation Loss: {val_loss:.2f}")
 
     torch.save(model.state_dict(), "model384_384.pt")

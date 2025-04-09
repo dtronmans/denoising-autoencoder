@@ -43,8 +43,7 @@ def infer(image_path, show=True):
 
 
 if __name__ == "__main__":
-    path = os.path.join("train_set", "all")
-
+    path = os.path.join("denoiser_dataset", "annotated")
     for image in tqdm(os.listdir(path)):
         cleaned_image = infer(os.path.join(path, image), show=True)
-        # cv2.imwrite(os.path.join("all_datasets/LUMC_util_png_inferred/malignant", image), cleaned_image)
+        cv2.imwrite(os.path.join(path, image), cleaned_image)
