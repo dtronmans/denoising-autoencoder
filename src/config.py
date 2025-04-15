@@ -59,6 +59,6 @@ class Config:
         elif self.architecture == "AutoencoderWithSkipConnections":
             self.architecture = AutoencoderWithSkipConnections(3)
         elif self.architecture == "JungUNet":
-            self.architecture = JungUNet(3)
+            self.architecture = JungUNet(1)
         elif self.architecture == "BasicUNet":
             self.architecture = BasicUNet(1, 1)
