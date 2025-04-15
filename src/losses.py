@@ -46,8 +46,11 @@ def l1_loss(predicted, target):
     return F.l1_loss(predicted, target)
 
 
-def total_loss(predicted, target, lambda_l1=1.0, lambda_ssim=0.5, lambda_edge=0.3):
-    l1 = l1_loss(predicted, target)
+def mse_loss(predicted, target):
+    return F.mse_loss(predicted, target)
+
+
+def total_loss(predicted, target, lambda_mse=1.0, lambda_ssim=0.2):
+    mse = mse_loss(predicted, target)
     ssim = ssim_loss(predicted, target)
-    edge = edge_loss(predicted, target)
-    return lambda_l1 * l1 + lambda_ssim * ssim + lambda_edge * edge
+    return lambda_mse * mse + lambda_ssim * ssim

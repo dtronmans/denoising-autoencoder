@@ -9,7 +9,7 @@ import random
 class Color(Enum):
     WHITE = (255, 255, 255)
     YELLOW = (0, 255, 255)
-    LIGHT_BLUE = (255, 204, 51)
+    LIGHT_BLUE = (255, 255, 0)
 
 
 class DrawUtils:
@@ -65,7 +65,7 @@ class DrawUtils:
             nonlocal selected_points
             if event == cv2.EVENT_LBUTTONDOWN:
                 selected_points.append((y, x))
-                cv2.drawMarker(image_copy, (x, y), (0, 0, 255), cv2.MARKER_CROSS, 10, 2)
+                cv2.drawMarker(image_copy, (x, y), (0, 0, 255), cv2.MARKER_CROSS, 10, 1)
                 cv2.imshow("Select two points", image_copy)
 
                 if len(selected_points) == 2:
@@ -166,7 +166,7 @@ class DrawUtils:
 
 
 if __name__ == "__main__":
-    dataset_path = "draw"
+    dataset_path = "denoiser_dataset"
     path_clean = os.path.join(dataset_path, "clean")
     path_annotated = os.path.join(dataset_path, "annotated")
 
@@ -189,8 +189,8 @@ if __name__ == "__main__":
             draw_color = Color.LIGHT_BLUE
         elif random_number > 0.3 and random_number < 0.66:
             draw_color = Color.YELLOW
-        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, draw_color, num_dots=30,
+        drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, draw_color, num_dots=15,
                                             interactive_mode=True)
-        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, draw_color, num_dots=30,
+        drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, draw_color, num_dots=15,
                                             interactive_mode=True)
         cv2.imwrite(os.path.join(path_annotated, filename), drawn_image)
