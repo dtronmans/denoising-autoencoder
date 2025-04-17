@@ -13,9 +13,9 @@ class Config:
             config = json.load(file)
 
         # Dataset
-        self.dataset = self.get_nested(config, ['dataset', 'dataset'])
-        self.dataset_path = self.get_nested(config, ['dataset', 'dataset_path'])
-        self.clean_images_txt = self.get_nested(config, ['dataset', 'clean_images_txt'])
+        # self.dataset = self.get_nested(config, ['dataset', 'dataset'])
+        # self.dataset_path = self.get_nested(config, ['dataset', 'dataset_path'])
+        # self.clean_images_txt = self.get_nested(config, ['dataset', 'clean_images_txt'])
 
         # Training
         self.architecture = self.get_nested(config, ['training', 'architecture'])
