@@ -32,7 +32,7 @@ class JungUNet(nn.Module):
         self.up_conv_2 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
 
         self.encoder_6 = EncoderBlock(128 + 64, 64, 64)
-        self.last_conv = nn.Conv2d(64, 3, kernel_size=1)
+        self.last_conv = nn.Conv2d(64, 1, kernel_size=1)
 
     def forward(self, x):
         encoder_1_output = self.encoder_1(x)
