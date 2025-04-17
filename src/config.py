@@ -13,9 +13,9 @@ class Config:
             config = json.load(file)
 
         # Dataset
-        self.dataset = self.get_nested(config, ['dataset', 'dataset'])
-        self.dataset_path = self.get_nested(config, ['dataset', 'dataset_path'])
-        self.clean_images_txt = self.get_nested(config, ['dataset', 'clean_images_txt'])
+        # self.dataset = self.get_nested(config, ['dataset', 'dataset'])
+        # self.dataset_path = self.get_nested(config, ['dataset', 'dataset_path'])
+        # self.clean_images_txt = self.get_nested(config, ['dataset', 'clean_images_txt'])
 
         # Training
         self.architecture = self.get_nested(config, ['training', 'architecture'])
@@ -44,15 +44,15 @@ class Config:
         return dictionary
 
     def parse_architecture_dataset(self):
-        self.transforms = transforms.Compose([
-            transforms.Resize((336, 544)),
-            transforms.ToTensor()
-        ])
+        # self.transforms = transforms.Compose([
+        #     transforms.Resize((336, 544)),
+        #     transforms.ToTensor()
+        # ])
 
-        if self.dataset == "UltrasoundDataset":
-            self.dataset = UltrasoundDataset(self.dataset_path, transforms=self.transforms)
-        else:
-            raise ValueError("Not a correct selected dataset")
+        # if self.dataset == "UltrasoundDataset":
+        #     self.dataset = UltrasoundDataset(self.dataset_path, transforms=self.transforms)
+        # else:
+        #     raise ValueError("Not a correct selected dataset")
 
         if self.architecture == "Autoencoder":
             self.architecture = Autoencoder(3)
