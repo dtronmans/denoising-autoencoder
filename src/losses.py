@@ -50,7 +50,27 @@ def mse_loss(predicted, target):
     return F.mse_loss(predicted, target)
 
 
-def total_loss(predicted, target, lambda_mse=1.0, lambda_ssim=0.2):
-    mse = mse_loss(predicted, target)
+class WeightedLoss(nn.Module):
+    def __init__(self, alpha=5.0, beta=1.0):
+        super(WeightedLoss, self).__init__()
+        self.alpha = alpha
+        self.beta = beta
+
+    def forward(self, clean, annotated, predicted):
+        arrow_mask = (annotated != clean).float()
+
+        weight_map = self.alpha * arrow_mask + self.beta * (1 - arrow_mask)
+
+        pixel_wise_error = (clean - predicted) ** 2
+
+        weighted_error = weight_map * pixel_wise_error
+        loss = weighted_error.sum() / weight_map.sum()
+
+        return loss
+
+
+def total_loss(clean, predicted, target, lambda_mse=1.0, lambda_ssim=0.2):
+    mse = WeightedLoss()
+    weighted_loss = mse(clean, predicted, target)
     ssim = ssim_loss(predicted, target)
-    return lambda_mse * mse + lambda_ssim * ssim
+    return lambda_mse * weighted_loss + lambda_ssim * ssim
