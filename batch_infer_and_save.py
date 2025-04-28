@@ -16,7 +16,7 @@ def infer(image_path, model):
         transforms.Resize((336, 544)),
         transforms.ToTensor()
     ])
-    image_tensor = transform(image).unsqueeze(0)  # Add batch dimension
+    image_tensor = transform(image).unsqueeze(0).to(torch.device("cuda"))  # Add batch dimension
 
     with torch.no_grad():
         output = model(image_tensor)

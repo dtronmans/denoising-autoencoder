@@ -11,7 +11,7 @@
   },
   "dataset": {
     "dataset": "UltrasoundDataset",
-    "dataset_path": "/exports/lkeb-hpc/dzrogmans/denoiser_dataset",
+    "dataset_path": "denoiser_dataset",
     "clean_images_txt": "rdg_clean.txt"
   },
   "draw": {

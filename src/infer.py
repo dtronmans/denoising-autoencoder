@@ -44,7 +44,7 @@ def infer(image_path, model, show=True):
 if __name__ == "__main__":
     path = "../final_datasets/once_more/mtl_final/images/benign"
     config = Config(os.path.join("src", "config.json"))
-    config.architecture.load_state_dict(torch.load("model336_544.pt", weights_only=True, map_location=torch.device('cpu')))
+    config.architecture.load_state_dict(torch.load("denoiser_better.pt", weights_only=True, map_location=torch.device('cpu')))
     config.architecture.eval()
     paths = os.listdir(path)
     random.shuffle(paths)
