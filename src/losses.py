@@ -69,8 +69,8 @@ class WeightedLoss(nn.Module):
         return loss
 
 
-def total_loss(clean, predicted, target, lambda_mse=1.0, lambda_ssim=0.1):
-    mse = WeightedLoss()
+def total_loss(clean, predicted, target, lambda_mse=1.0, lambda_ssim=0.05):
+    mse = WeightedLoss(alpha=100.0, beta=1.0)
     weighted_loss = mse(clean, predicted, target)
     ssim = ssim_loss(predicted, target)
     return lambda_mse * weighted_loss + lambda_ssim * ssim

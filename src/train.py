@@ -1,4 +1,4 @@
-from torch import nn
+import torch.nn.functional as F
 from tqdm import tqdm
 import os
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
             optimizer.zero_grad()
             predicted = model(annotated)
-            loss = total_loss(clean, annotated, predicted)
+            loss = F.mse_loss(predicted, clean)
             train_loss += loss.item()
 
             loss.backward()
@@ -59,11 +59,11 @@ if __name__ == "__main__":
 
                 predicted = model(annotated)
 
-                loss = total_loss(clean, annotated, predicted)
+                loss = F.mse_loss(predicted, clean)
                 val_loss += loss.item()
 
         val_loss /= len(val_loader)
         val_loss = val_loss * 10
         print(f"Epoch {epoch}, Validation Loss: {val_loss:.2f}")
 
-    torch.save(model.state_dict(), "model336_544.pt")
+    torch.save(model.state_dict(), "denoiser_mse.pt")

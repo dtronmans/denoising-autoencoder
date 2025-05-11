@@ -3,7 +3,7 @@
     "loss_alpha": 60.0,
     "loss_beta": 1.0,
     "resize_size": 256,
-    "epochs": 150,
+    "epochs": 50,
     "lr": 0.001,
     "batch_size": 4,
     "val_split": 0.1,
@@ -11,7 +11,7 @@
   },
   "dataset": {
     "dataset": "UltrasoundDataset",
-    "dataset_path": "denoiser_dataset",
+    "dataset_path": "/exports/lkeb-hpc/dzrogmans/denoiser_dataset",
     "clean_images_txt": "rdg_clean.txt"
   },
   "draw": {
