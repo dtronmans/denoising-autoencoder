@@ -16,7 +16,7 @@ def infer(image_path, model):
         transforms.Resize((336, 544)),
         transforms.ToTensor()
     ])
-    image_tensor = transform(image).unsqueeze(0).to(torch.device("cuda"))  # Add batch dimension
+    image_tensor = transform(image).unsqueeze(0).to(torch.device("cpu"))  # Add batch dimension
 
     with torch.no_grad():
         output = model(image_tensor)
@@ -39,6 +39,8 @@ def process_directory(input_dir, output_dir, label, model):
     random.shuffle(image_filenames)
 
     for filename in tqdm(image_filenames, desc=f"Processing {label}"):
+        if filename.endswith("json"):
+            continue
         input_image_path = os.path.join(input_path, filename)
         output_image = infer(input_image_path, model)
 
@@ -47,12 +49,14 @@ def process_directory(input_dir, output_dir, label, model):
 
 
 def main(input_dir, output_dir):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     config = Config(os.path.join("src", "config.json"))
     model = config.architecture
-    model.load_state_dict(torch.load("model336_544.pt", map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load("/exports/lkeb-hpc/dzrogmans/denoiser_my_loss.pt", map_location=device))
+    model.to(device)
     model.eval()
 
-    for label in ["benign", "malignant"]:
+    for label in ["images"]:
         process_directory(input_dir, output_dir, label, model)
 
 

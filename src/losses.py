@@ -18,34 +18,6 @@ def ssim_loss(predicted, target, C1=0.01 ** 2, C2=0.03 ** 2, window_size=11):
     return 1 - ssim_map.mean()
 
 
-def sobel_filter():
-    sobel_x = torch.tensor([[[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]], dtype=torch.float32)
-    sobel_y = torch.tensor([[[-1, -2, -1], [0, 0, 0], [1, 2, 1]]], dtype=torch.float32)
-    sobel_x = sobel_x.view(1, 1, 3, 3)
-    sobel_y = sobel_y.view(1, 1, 3, 3)
-    return sobel_x, sobel_y
-
-
-def edge_loss(predicted, target):
-    sobel_x, sobel_y = sobel_filter()
-    sobel_x = sobel_x.to(predicted.device)
-    sobel_y = sobel_y.to(predicted.device)
-
-    grad_pred_x = F.conv2d(predicted, sobel_x, padding=1)
-    grad_pred_y = F.conv2d(predicted, sobel_y, padding=1)
-    grad_pred = torch.sqrt(grad_pred_x ** 2 + grad_pred_y ** 2 + 1e-6)
-
-    grad_target_x = F.conv2d(target, sobel_x, padding=1)
-    grad_target_y = F.conv2d(target, sobel_y, padding=1)
-    grad_target = torch.sqrt(grad_target_x ** 2 + grad_target_y ** 2 + 1e-6)
-
-    return F.l1_loss(grad_pred, grad_target)
-
-
-def l1_loss(predicted, target):
-    return F.l1_loss(predicted, target)
-
-
 def mse_loss(predicted, target):
     return F.mse_loss(predicted, target)
 
@@ -71,6 +43,6 @@ class WeightedLoss(nn.Module):
 
 def total_loss(clean, predicted, target, lambda_mse=1.0, lambda_ssim=0.05):
     mse = WeightedLoss(alpha=100.0, beta=1.0)
-    weighted_loss = mse(clean, predicted, target)
+    weighted_loss = mse(clean, target, predicted)
     ssim = ssim_loss(predicted, target)
     return lambda_mse * weighted_loss + lambda_ssim * ssim
