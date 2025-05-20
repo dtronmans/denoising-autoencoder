@@ -18,10 +18,6 @@ def ssim_loss(predicted, target, C1=0.01 ** 2, C2=0.03 ** 2, window_size=11):
     return 1 - ssim_map.mean()
 
 
-def mse_loss(predicted, target):
-    return F.mse_loss(predicted, target)
-
-
 class WeightedLoss(nn.Module):
     def __init__(self, alpha=5.0, beta=1.0):
         super(WeightedLoss, self).__init__()

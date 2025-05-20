@@ -26,7 +26,7 @@ class DrawUtils:
     @staticmethod
     def find_ovaries(image, display_contour=True):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)
+        _, thresh = cv2.threshold(gray, 0, 250, cv2.THRESH_BINARY)
 
         contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -119,9 +119,9 @@ class DrawUtils:
         try:
             point1, _ = ovarian_points
 
-            text = random.choice(["Rt. Ovary", "LL Ovary", "Li Ov"])
+            text = random.choice(["Rt. Ovary", "LL Ovary", "Li Ov", "Lt. Ovary"])
             font = cv2.FONT_HERSHEY_SIMPLEX
-            font_scale = 1
+            font_scale = 0.5
             font_thickness = 2
 
             cv2.putText(image, text, (point1[1], point1[0] - 10), font, font_scale,
@@ -190,7 +190,7 @@ if __name__ == "__main__":
         elif random_number > 0.3 and random_number < 0.66:
             draw_color = Color.YELLOW
         drawn_image = DrawUtils.draw_arrows(processed_image, ovarian_mask_2, draw_color, num_dots=15,
-                                            interactive_mode=True)
+                                            interactive_mode=False)
         drawn_image = DrawUtils.draw_arrows(drawn_image, ovarian_mask_3, draw_color, num_dots=15,
-                                            interactive_mode=True)
+                                            interactive_mode=False)
         cv2.imwrite(os.path.join(path_annotated, filename), drawn_image)
