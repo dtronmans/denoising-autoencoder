@@ -52,7 +52,7 @@ def main(input_dir, output_dir):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     config = Config(os.path.join("src", "config.json"))
     model = config.architecture
-    model.load_state_dict(torch.load("/exports/lkeb-hpc/dzrogmans/denoiser_my_loss.pt", map_location=device))
+    model.load_state_dict(torch.load("denoiser_mse.pt", map_location=device))
     model.to(device)
     model.eval()
 
